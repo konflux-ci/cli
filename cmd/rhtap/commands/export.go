@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"log"
 
-	hasApplicationAPI "github.com/redhat-appstudio/rhtap-cli/api"
-
+	// TODO: Figure out how to avoid the dependency hell and use APIs
+	// from remote repositories.
+	rhapAPI "github.com/redhat-appstudio/rhtap-cli/api"
 	//intergrationServiceApi "github.com/redhat-appstudio/integration-service/api/v1beta1"
-
-	v1 "k8s.io/api/core/v1"
 )
 
-// List is a function to list number of pods in the cluster
-func List(args []string, cloneConfig *CloneConfig) error {
+// Export is a function to export an Application and its associated resources to
+// an importable YAML file.
+func Export(args []string, cloneConfig *CloneConfig) error {
 
 	// ensure we've been able to pass everything OK
 
@@ -24,56 +24,48 @@ func List(args []string, cloneConfig *CloneConfig) error {
 		cloneConfig.ComponentSourceURLOverrides[0],
 	)
 
+	// config from kubeconfig
 	client, clientError := NewOpenShiftClient()
 
 	if clientError != nil {
 		log.Fatal(clientError)
 		return clientError
 	}
+	var applications = &rhapAPI.ApplicationList{}
 
-	var mycms = &v1.ConfigMapList{}
-	err := client.RESTClient().Get().AbsPath("/api/v1/namespaces/shbose-tenant/configmaps").
-		Do(context.TODO()).
-		Into(mycms)
+	// TODO: No need to get all Applications, only get the relevant one
+	// and ensure it actually exists
+	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/applications", cloneConfig.SourceNamespace)).
+		Do(context.TODO()).Into(applications)
 
-	fmt.Println(len(mycms.Items))
-	fmt.Println(err)
-
-	var applications = &hasApplicationAPI.ApplicationList{}
-
-	err = client.RESTClient().Get().AbsPath("/apis/appstudio.redhat.com/v1alpha1/namespaces/shbose-tenant/applications").
-		Do(context.TODO()).
-		Into(applications)
-
+	if err != nil {
+		// TODO: Wrap it into something meaningful.
+		return err
+	}
 	fmt.Println(applications)
-	fmt.Println(err)
 
-	var components = &hasApplicationAPI.ComponentList{}
-	err = client.RESTClient().Get().AbsPath("/apis/appstudio.redhat.com/v1alpha1/namespaces/shbose-tenant/components").
+	var components = &rhapAPI.ComponentList{}
+	err = client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/components", cloneConfig.SourceNamespace)).
+		Do(context.TODO()).Into(components)
+
+	if err != nil {
+		// TODO: Wrap it into something meaningful.
+		return err
+	}
+	// TODO: Remove non-relevant Components from the list.
+	// TODO: Read-up "overrides" and recreate Components which need to have a new source
+	// code URL
+	// TODO: Re-create Component resources with image references instead of
+	// source code URL references.
+
+	var integrationTestScenarios = &rhapAPI.IntegrationTestScenarioList{}
+	err = client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1beta1/namespaces/%s/integrationtestscenarios", cloneConfig.SourceNamespace)).
 		Do(context.TODO()).
-		Into(components)
+		Into(integrationTestScenarios)
 
-	fmt.Println(components)
-	fmt.Println(err)
+	// TODO: Remove non-relevant IntegrationTestScenarios
 
-	var integrationTestScenarios = hasApplicationAPI.IntegrationTestScenarioList{}
-	err = client.RESTClient().Get().AbsPath("/apis/appstudio.redhat.com/v1beta1/namespaces/shbose-tenant/integrationtestscenarios").
-		Do(context.TODO()).
-		Into(components)
-
-	fmt.Println(integrationTestScenarios)
-	fmt.Println(err)
+	// TODO: Write out a YAML for future use.
 
 	return err
-
-	/*
-		pods, podlisterror := client.CoreV1().Pods(envVar.Namespace).List(context.TODO(), metav1.ListOptions{})
-		if podlisterror == nil {
-			fmt.Printf("\nThe number of pods are %d \n", len(pods.Items))
-		} else {
-			log.Fatal(podlisterror)
-		}
-
-		return podlisterror
-	*/
 }

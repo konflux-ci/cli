@@ -46,6 +46,6 @@ var applicationCommand = &cobra.Command{
 	Use: "application",
 	Run: func(cm *cobra.Command, args []string) {
 		fmt.Println("Export Application and associated resources into a YAML file")
-		commands.List(args, cloneConfig)
+		commands.Export(args, cloneConfig)
 	},
 }
