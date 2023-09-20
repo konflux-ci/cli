@@ -28,7 +28,7 @@ func init() {
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.TargetNamespace, "to-namespace", "t", "", "Namespace to which the Application is being cloned.")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "overrides", "o", "", "Overwrite the source code url for specific components")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "skip", "s", "", "List of components to be skipped")
-	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "write-to", "w", "", "Local filesystem path where the YAML would be written out to.")
+	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.OutputFile, "write-to", "w", "", "Local filesystem path where the YAML would be written out to.")
 
 	exportCommand.AddCommand(applicationCommand)
 }
