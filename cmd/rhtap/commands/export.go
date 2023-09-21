@@ -151,10 +151,10 @@ func generateExportableApplication(fetchedApplication rhapAPI.Application, targe
 			Kind:       "Application",
 		},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        fetchedApplication.Name,
-			Namespace:   targetNamespace,
+			Name:      fetchedApplication.Name,
+			Namespace: targetNamespace,
 			Annotations: map[string]string{
-				// TODO, add annotations so that the UI renders this
+				"application.thumbnail": "1",
 			},
 		},
 		Spec: rhapAPI.ApplicationSpec{
@@ -168,7 +168,7 @@ func generateExportableComponent(fetchedComponent rhapAPI.Component, targetNames
 	overridesMap := generateOverridesMap(overrides)
 	val, ok := overridesMap[fetchedComponent.Name]
 	if ok {
-		fmt.Println(fmt.Sprintf("Found an override for %s : %s", fetchedComponent.Name, val))
+		fmt.Printf("Found an override for %s : %s \n", fetchedComponent.Name, val)
 
 		exportableComponent = rhapAPI.Component{
 			TypeMeta: metav1.TypeMeta{
@@ -224,6 +224,16 @@ func generateExportableComponent(fetchedComponent rhapAPI.Component, targetNames
 				Env:            fetchedComponent.Spec.Env,
 				TargetPort:     fetchedComponent.Spec.TargetPort,
 				ContainerImage: fetchedComponent.Spec.ContainerImage,
+				Source: rhapAPI.ComponentSource{
+					ComponentSourceUnion: rhapAPI.ComponentSourceUnion{
+						GitSource: &rhapAPI.GitSource{
+							URL:           fetchedComponent.Spec.Source.GitSource.URL,
+							Context:       fetchedComponent.Spec.Source.GitSource.Revision,
+							Revision:      fetchedComponent.Spec.Source.GitSource.Revision,
+							DockerfileURL: fetchedComponent.Spec.Source.GitSource.DockerfileURL,
+						},
+					},
+				},
 			},
 		}
 	}
