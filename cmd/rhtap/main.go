@@ -24,8 +24,8 @@ func init() {
 	rcommand.AddCommand(versionCommand)
 	rcommand.AddCommand(exportCommand)
 
-	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.SourceNamespace, "from-namespace", "f", "", "Namespace from which the Application is being cloned.")
-	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.TargetNamespace, "to-namespace", "t", "", "Namespace to which the Application is being cloned.")
+	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.SourceNamespace, "from", "f", "", "Namespace from which the Application is being cloned.")
+	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.TargetNamespace, "to", "t", "", "Namespace to which the Application is being cloned.")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "overrides", "o", "", "Overwrite the source code url for specific components")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "skip", "s", "", "List of components to be skipped")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.OutputFile, "write-to", "w", "", "Local filesystem path where the YAML would be written out to.")

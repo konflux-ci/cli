@@ -17,17 +17,6 @@ type CloneConfig struct {
 	OutputFile                  string
 }
 
-/*
-modified variables to be inside a struct instead, and using references to instances of struct
-
-	to access them in order to avoid using global variables
-*/
-type EnvironmentVariables struct {
-	Host        string
-	Namespace   string
-	Bearertoken string
-}
-
 func NewOpenShiftClient() (*kubernetes.Clientset, error) {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {

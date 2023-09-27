@@ -10,6 +10,7 @@ import (
 	// TODO: Figure out how to avoid the dependency hell and use APIs
 	// from remote repositories.
 	rhapAPI "github.com/redhat-appstudio/rhtap-cli/api"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/yaml"
 	//intergrationServiceApi "github.com/redhat-appstudio/integration-service/api/v1beta1"
@@ -21,7 +22,10 @@ func Export(args []string, cloneConfig *CloneConfig) error {
 
 	// ensure we've been able to pass everything OK
 
-	// TODO: Handle error if empty.
+	if len(args) == 0 {
+		fmt.Println("Application not specified")
+		return fmt.Errorf("application not specified")
+	}
 	cloneConfig.ApplicatioName = args[0]
 
 	// config from kubeconfig
@@ -60,9 +64,10 @@ func Export(args []string, cloneConfig *CloneConfig) error {
 	if err != nil {
 		fmt.Println("Error exporting resources ", err.Error())
 	}
-	_, err = file.Write(inBytes)
+
+	err = writeKubernetesResourceToFile(file, inBytes)
 	if err != nil {
-		fmt.Println("Error exporting resources ", err.Error())
+		return err
 	}
 
 	var components = &rhapAPI.ComponentList{}
@@ -70,8 +75,7 @@ func Export(args []string, cloneConfig *CloneConfig) error {
 		Do(context.TODO()).Into(components)
 
 	if err != nil {
-		// TODO: Wrap it into something meaningful.
-		return err
+		return fmt.Errorf("could not fetch components in namespace %s: %v", cloneConfig.SourceNamespace, err.Error())
 	}
 
 	for _, c := range components.Items {
@@ -84,12 +88,10 @@ func Export(args []string, cloneConfig *CloneConfig) error {
 			if err != nil {
 				fmt.Println("Error exporting resources ", err.Error())
 			}
-			file.WriteString("---\n")
-			_, err = file.Write(inBytes)
+			err = writeKubernetesResourceToFile(file, inBytes)
 			if err != nil {
-				fmt.Println("Error exporting resources ", err.Error())
+				return err
 			}
-
 		}
 	}
 
@@ -103,6 +105,10 @@ func Export(args []string, cloneConfig *CloneConfig) error {
 		Do(context.TODO()).
 		Into(integrationTestScenarios)
 
+	if err != nil {
+		return fmt.Errorf("could not fetch IntegrationTestScenarios in namespace %s: %v", cloneConfig.SourceNamespace, err.Error())
+	}
+
 	// TODO: Remove non-relevant IntegrationTestScenarios
 	for _, itc := range integrationTestScenarios.Items {
 		if itc.Spec.Application == cloneConfig.ApplicatioName {
@@ -111,15 +117,53 @@ func Export(args []string, cloneConfig *CloneConfig) error {
 			if err != nil {
 				fmt.Println("Error exporting resources ", err.Error())
 			}
-			file.WriteString("---\n")
-			_, err = file.Write(inBytes)
+			err = writeKubernetesResourceToFile(file, inBytes)
 			if err != nil {
-				fmt.Println("Error exporting resources ", err.Error())
+				return err
 			}
 
 		}
 	}
+
+	// Get the relevant custom secrets exported.
+	// As of now, we only have the snyk token to be exported.
+	// There's no good way to know if this Application uses the snyk token.
+	// We'll export it anyway. Definitely room for improvement.
+
+	snykTokenSecret := &v1.Secret{}
+	err = client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1beta1/namespaces/%s/secrets/snyk-secret", cloneConfig.SourceNamespace)).
+		Do(context.TODO()).
+		Into(snykTokenSecret)
+
+	if err != nil {
+		return fmt.Errorf("could not fetch snyk-secret from the namespace %s : %v", cloneConfig.SourceNamespace, err.Error())
+	}
+
+	exportableSecret := generateExportableSecret(snykTokenSecret, cloneConfig.TargetNamespace)
+	inBytes, err = yaml.Marshal(exportableSecret)
+	if err != nil {
+		return fmt.Errorf("could not convert Secret to bytes prior to writing out to file : %s", err.Error())
+	}
+
+	err = writeKubernetesResourceToFile(file, inBytes)
+	if err != nil {
+		return fmt.Errorf("could not write Secret to file : %v", err.Error())
+	}
+
 	return err
+}
+
+func writeKubernetesResourceToFile(file *os.File, inBytes []byte) error {
+	_, err := file.WriteString("---\n")
+	if err != nil {
+		return fmt.Errorf("yaml delimiter could not be added : %v", err)
+	}
+	_, err = file.Write(inBytes)
+	if err != nil {
+		return fmt.Errorf("error exporting kubernetes resource to the file : %v", err)
+	}
+
+	return nil
 }
 
 func generateOverridesMap(overrides string) map[string]string {
@@ -128,6 +172,19 @@ func generateOverridesMap(overrides string) map[string]string {
 		overridesMap[strings.Split(s, "=")[0]] = strings.Split(s, "=")[1]
 	}
 	return overridesMap
+}
+
+func generateExportableSecret(
+	fetchedSecret *v1.Secret, targetNamespace string) *v1.Secret {
+	return &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      fetchedSecret.Name,
+			Namespace: targetNamespace,
+		},
+		TypeMeta: fetchedSecret.TypeMeta,
+		Data:     fetchedSecret.Data,
+		Type:     fetchedSecret.Type,
+	}
 }
 
 func generateExportableIntegrationTestScenario(
