@@ -9,14 +9,6 @@ import (
 	"k8s.io/client-go/util/homedir"
 )
 
-type CloneConfig struct {
-	ApplicatioName              string
-	SourceNamespace             string
-	TargetNamespace             string
-	ComponentSourceURLOverrides string
-	OutputFile                  string
-}
-
 func NewOpenShiftClient() (*kubernetes.Clientset, error) {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {

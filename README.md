@@ -14,11 +14,11 @@ Usage:
   rhtap export application [flags]
 
 Flags:
-  -f, --from-namespace string   Namespace from which the Application is being cloned.
+  -f, --from string             Namespace from which the Application is being cloned.
   -h, --help                    help for application
   -o, --overrides string        Overwrite the source code url for specific components
   -s, --skip string             List of components to be skipped
-  -t, --to-namespace string     Namespace to which the Application is being cloned.
+  -t, --to string               Namespace to which the Application is being cloned.
   -w, --write-to string         Local filesyste path where the YAML would be written out to.
 
 ```

@@ -1,142 +1,143 @@
 package commands
 
 import (
-	"reflect"
+	"context"
 	"testing"
 
-	rhapAPI "github.com/redhat-appstudio/rhtap-cli/api"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
 )
 
-func Test_generateOverridesMap(t *testing.T) {
+func Test_validateConfig(t *testing.T) {
 	type args struct {
-		overrides string
+		ctx         context.Context
+		cloneConfig *config.CloneConfig
+		args        []string
 	}
 	tests := []struct {
-		name string
-		args args
-		want map[string]string
+		name            string
+		args            args
+		wantErr         bool
+		wantCloneConfig *config.CloneConfig
 	}{
 		{
-			"basic test",
-			args{
-				overrides: "comp1=github.com/foo/bar",
+			name: "system backup - all namespaces",
+			args: args{
+				ctx: context.Background(),
+				cloneConfig: &config.CloneConfig{
+					AllNamespaces:               true,
+					AllApplications:             false,
+					ApplicatioName:              "",
+					SourceNamespace:             "",
+					TargetNamespace:             "",
+					ComponentSourceURLOverrides: "",
+					ComponentSourceURLskip:      "",
+					OutputFile:                  "",
+				},
 			},
-			map[string]string{
-				"comp1": "github.com/foo/bar",
+			wantErr: false,
+			wantCloneConfig: &config.CloneConfig{
+				AllApplications: true,
+				ApplicatioName:  "",
+				OutputFile:      "something",
 			},
 		},
 		{
-			"multiple",
-			args{
-				overrides: "comp1=github.com/foo/bar   comp2=github.com/foo/bar",
+			name: "backup for embargo usecase - application not specified",
+			args: args{
+				ctx: context.Background(),
+				cloneConfig: &config.CloneConfig{
+					AllApplications:             false,
+					ApplicatioName:              "",
+					AllNamespaces:               false,
+					SourceNamespace:             "source-namespace",
+					TargetNamespace:             "target-namespace",
+					ComponentSourceURLOverrides: "",
+					ComponentSourceURLskip:      "",
+					OutputFile:                  "",
+				},
 			},
-			map[string]string{
-				"comp1": "github.com/foo/bar",
-				"comp2": "github.com/foo/bar",
+			wantErr: true,
+			wantCloneConfig: &config.CloneConfig{
+				AllApplications: false,
+				ApplicatioName:  "",
+				SourceNamespace: "source-namespace",
+				TargetNamespace: "target-namespace",
+				OutputFile:      "something",
 			},
 		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := generateOverridesMap(tt.args.overrides); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("generateOverridesMap() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+		{
+			name: "backup for embargo usecase - true",
+			args: args{
+				ctx:  context.Background(),
+				args: []string{"foo"},
+				cloneConfig: &config.CloneConfig{
+					AllApplications:             false,
+					ApplicatioName:              "app",
+					AllNamespaces:               false,
+					SourceNamespace:             "source-namespace",
+					TargetNamespace:             "target-namespace",
+					ComponentSourceURLOverrides: "",
+					ComponentSourceURLskip:      "",
+					OutputFile:                  "something",
+				},
+			},
+			wantErr: false,
 
-func Test_generateExportableComponent(t *testing.T) {
-	type args struct {
-		fetchedComponent rhapAPI.Component
-		targetNamespace  string
-		overrides        string
-	}
-	tests := []struct {
-		name string
-		args args
-		want *rhapAPI.Component
-	}{
-		{
-			"impacted component",
-			args{
-				fetchedComponent: rhapAPI.Component{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      "comp1",
-						Namespace: "source-namespace",
-					},
-					Spec: rhapAPI.ComponentSpec{
-						ComponentName: "comp1",
-						Source: rhapAPI.ComponentSource{
-							ComponentSourceUnion: rhapAPI.ComponentSourceUnion{
-								GitSource: &rhapAPI.GitSource{
-									URL: "github.com/org/repo",
-								},
-							},
-						},
-						ContainerImage: "quay.io/org/repo",
-					},
-				},
-				targetNamespace: "target-namespace",
-				overrides:       "comp1=github.com/private/comp1 comp2=github.com/private/comp2",
-			},
-			&rhapAPI.Component{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "name",
-					Namespace: "target-namespace",
-					Annotations: map[string]string{
-						"skip-initial-checks":       "true",
-						"image.redhat.com/generate": `{"visibility": "public"}`,
-					},
-				},
-				Spec: rhapAPI.ComponentSpec{
-					ComponentName: "comp1",
-					Source: rhapAPI.ComponentSource{
-						ComponentSourceUnion: rhapAPI.ComponentSourceUnion{
-							GitSource: &rhapAPI.GitSource{
-								URL: "github.com/private/comp1",
-							},
-						},
-					},
-				},
+			// doesn't matter
+			wantCloneConfig: &config.CloneConfig{
+				AllApplications: false,
+				ApplicatioName:  "foo",
+				SourceNamespace: "source-namespace",
+				TargetNamespace: "target-namespace",
 			},
 		},
 		{
-			"non-impacted component",
-			args{
-				fetchedComponent: rhapAPI.Component{
-					ObjectMeta: metav1.ObjectMeta{
-						Name:      "name",
-						Namespace: "source-namespace",
-					},
-					Spec: rhapAPI.ComponentSpec{
-						ComponentName:  "name",
-						ContainerImage: "quay.io/org/repo",
-					},
+			name: "target ns not specified",
+			args: args{
+				ctx:  context.Background(),
+				args: []string{"foo"},
+				cloneConfig: &config.CloneConfig{
+					AllApplications:             false,
+					ApplicatioName:              "app",
+					AllNamespaces:               false,
+					SourceNamespace:             "source-namespace",
+					TargetNamespace:             "",
+					ComponentSourceURLOverrides: "",
+					ComponentSourceURLskip:      "",
+					OutputFile:                  "something",
 				},
-				targetNamespace: "target-namespace",
-				overrides:       "comp1=github.com/private/comp1 comp2=github.com/private/comp2",
 			},
-			&rhapAPI.Component{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      "name",
-					Namespace: "target-namespace",
-					Annotations: map[string]string{
-						"skip-initial-checks": "true",
-					},
-				},
-				Spec: rhapAPI.ComponentSpec{
-					ComponentName:  "name",
-					ContainerImage: "quay.io/org/repo",
-				},
+			wantErr: false,
+
+			// doesn't matter
+			wantCloneConfig: &config.CloneConfig{
+				AllApplications: false,
+				ApplicatioName:  "foo",
+				SourceNamespace: "source-namespace",
+				TargetNamespace: "source-namespace",
 			},
 		},
+
+		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := generateExportableComponent(tt.args.fetchedComponent, tt.args.targetNamespace, tt.args.overrides); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("generateExportableComponent() = %v, want %v", got, tt.want)
+			//if err := validateConfig(tt.args.ctx, tt.args.cloneConfig, tt.args.args); (err != nil) != tt.wantErr {
+			//	t.Errorf("validateConfig() error = %v, wantErr %v", err, tt.wantErr)
+			//}
+
+			err := validateConfig(tt.args.ctx, tt.args.cloneConfig, tt.args.args)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("validateConfig() error = %v, wantErr %v", err, tt.wantErr)
 			}
+
+			assert.NotEmpty(t, tt.args.cloneConfig.OutputFile)
+			assert.Equal(t, tt.wantCloneConfig.ApplicatioName, tt.args.cloneConfig.ApplicatioName)
+			assert.Equal(t, tt.wantCloneConfig.AllApplications, tt.args.cloneConfig.AllApplications)
+			assert.Equal(t, tt.wantCloneConfig.TargetNamespace, tt.args.cloneConfig.TargetNamespace)
+			assert.Equal(t, tt.wantCloneConfig.SourceNamespace, tt.args.cloneConfig.SourceNamespace)
 		})
 	}
 }
