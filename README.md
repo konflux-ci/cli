@@ -43,6 +43,6 @@ would be written out to.
 1. Login to your RHTAP namespace using `kubelogin` or `kubectl`.
 
 2.  ```
-    ./rhtap export application build  -f rhtap-build-tenant -t shbose-tenant -output.yaml
+    ./rhtap export application build  --from rhtap-build-tenant --to shbose-tenant --write-to output.yaml
     ```
 
