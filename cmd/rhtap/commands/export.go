@@ -117,7 +117,7 @@ func exportResources(namespace string, apiExporters []exporters.ResourceExport, 
 
 func validateConfig(ctx context.Context, cloneConfig *config.CloneConfig, args []string) error {
 
-	if cloneConfig.OutputFile == "" {
+	if cloneConfig.OutputFile == "" || cloneConfig.AllNamespaces {
 		(*cloneConfig).OutputFile = time.Now().String()
 	}
 
