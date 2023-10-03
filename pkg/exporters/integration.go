@@ -38,15 +38,15 @@ func TransformIntegrationTestScenario(ctx context.Context, fetchedResourceList r
 	return selectedResources, nil
 }
 
-func GenerateYAMLForIntegrationTestScenario(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForIntegrationTestScenario(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		its := resource.(*rhtapAPI.IntegrationTestScenario)
 		inBytes, err := yaml.Marshal(its)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }

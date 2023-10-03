@@ -40,15 +40,15 @@ func TransformSnapshotEnvironmentBindings(ctx context.Context, fetchedResourceLi
 	return selectedResources, nil
 }
 
-func GenerateYAMLForSnapshotEnvironmentBindings(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForSnapshotEnvironmentBindings(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		snapshot := resource.(*rhtapAPI.SnapshotEnvironmentBinding)
 		inBytes, err := yaml.Marshal(snapshot)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }

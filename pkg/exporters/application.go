@@ -41,15 +41,15 @@ func TransformApplication(ctx context.Context, fetchedResourceList runtime.Objec
 	return selectedResources, nil
 }
 
-func GenerateYAMLForApplication(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForApplication(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		application := resource.(*rhtapAPI.Application)
 		inBytes, err := yaml.Marshal(application)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }

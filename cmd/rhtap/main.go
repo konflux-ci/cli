@@ -38,7 +38,8 @@ func init() {
 	//applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "overrides", "o", "", "Overwrite the source code url for specific components")
 
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLskip, "skip", "s", "", "List of components to be skipped")
-	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.OutputFile, "write-to", "w", "", "Local filesystem path where the YAML would be written out to.")
+	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.OutputDir, "write-to", "w", "", "Local filesystem directory path where the YAML would be written out to.")
+	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.Key, "key", "k", "", "Local filesystem path to an existing encryption key")
 
 	exportCommand.AddCommand(applicationCommand)
 }
@@ -56,6 +57,9 @@ var applicationCommand = &cobra.Command{
 	Use: "application",
 	Run: func(cm *cobra.Command, args []string) {
 		fmt.Println("Export Application and associated resources into a YAML file")
-		commands.Export(args, cloneConfig)
+		err := commands.Export(args, cloneConfig)
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }

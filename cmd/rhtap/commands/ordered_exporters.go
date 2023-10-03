@@ -23,6 +23,7 @@ func getOrderedExporters() []exporters.ResourceExport {
 			Transform:    exporters.TransformSecret,
 			GenerateYAML: exporters.GenerateYAMLForSecret,
 			Get:          exporters.GetSecrets,
+			Sensitive:    true,
 		},
 		{
 			Transform:    exporters.TransformEnvironment,

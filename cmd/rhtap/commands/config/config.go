@@ -8,5 +8,6 @@ type CloneConfig struct {
 	TargetNamespace             string
 	ComponentSourceURLOverrides string
 	ComponentSourceURLskip      string
-	OutputFile                  string
+	OutputDir                   string
+	Key                         string
 }

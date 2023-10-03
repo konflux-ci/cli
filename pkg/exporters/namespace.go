@@ -43,15 +43,15 @@ func TransformNamespace(ctx context.Context, fetchedResourceList runtime.Object,
 	return selectedResources, nil
 }
 
-func GenerateYAMLForNamespace(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForNamespace(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		ns := resource.(*corev1.Namespace)
 		inBytes, err := yaml.Marshal(ns)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }

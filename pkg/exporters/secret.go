@@ -32,15 +32,15 @@ func TransformSecret(ctx context.Context, fetchedResourceList runtime.Object, cl
 	return selectedResources, nil
 }
 
-func GenerateYAMLForSecret(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForSecret(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		secret := resource.(*v1.Secret)
 		inBytes, err := yaml.Marshal(secret)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }

@@ -33,14 +33,14 @@ func Test_validateConfig(t *testing.T) {
 					TargetNamespace:             "",
 					ComponentSourceURLOverrides: "",
 					ComponentSourceURLskip:      "",
-					OutputFile:                  "",
+					OutputDir:                   "",
 				},
 			},
 			wantErr: false,
 			wantCloneConfig: &config.CloneConfig{
 				AllApplications: true,
 				ApplicatioName:  "",
-				OutputFile:      "something",
+				OutputDir:       "something",
 			},
 		},
 		{
@@ -55,7 +55,7 @@ func Test_validateConfig(t *testing.T) {
 					TargetNamespace:             "target-namespace",
 					ComponentSourceURLOverrides: "",
 					ComponentSourceURLskip:      "",
-					OutputFile:                  "",
+					OutputDir:                   "",
 				},
 			},
 			wantErr: true,
@@ -64,7 +64,7 @@ func Test_validateConfig(t *testing.T) {
 				ApplicatioName:  "",
 				SourceNamespace: "source-namespace",
 				TargetNamespace: "target-namespace",
-				OutputFile:      "something",
+				OutputDir:       "something",
 			},
 		},
 		{
@@ -80,7 +80,7 @@ func Test_validateConfig(t *testing.T) {
 					TargetNamespace:             "target-namespace",
 					ComponentSourceURLOverrides: "",
 					ComponentSourceURLskip:      "",
-					OutputFile:                  "something",
+					OutputDir:                   "something",
 				},
 			},
 			wantErr: false,
@@ -106,7 +106,7 @@ func Test_validateConfig(t *testing.T) {
 					TargetNamespace:             "",
 					ComponentSourceURLOverrides: "",
 					ComponentSourceURLskip:      "",
-					OutputFile:                  "something",
+					OutputDir:                   "something",
 				},
 			},
 			wantErr: false,
@@ -133,7 +133,7 @@ func Test_validateConfig(t *testing.T) {
 				t.Errorf("validateConfig() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
-			assert.NotEmpty(t, tt.args.cloneConfig.OutputFile)
+			assert.NotEmpty(t, tt.args.cloneConfig.OutputDir)
 			assert.Equal(t, tt.wantCloneConfig.ApplicatioName, tt.args.cloneConfig.ApplicatioName)
 			assert.Equal(t, tt.wantCloneConfig.AllApplications, tt.args.cloneConfig.AllApplications)
 			assert.Equal(t, tt.wantCloneConfig.TargetNamespace, tt.args.cloneConfig.TargetNamespace)

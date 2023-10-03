@@ -40,15 +40,15 @@ func TransformSnapshots(ctx context.Context, fetchedResourceList runtime.Object,
 	return selectedResources, nil
 }
 
-func GenerateYAMLForSnapshots(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForSnapshots(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		snapshot := resource.(*rhtapAPI.Snapshot)
 		inBytes, err := yaml.Marshal(snapshot)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }

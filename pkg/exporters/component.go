@@ -66,15 +66,15 @@ func TransformComponent(ctx context.Context, fetchedResourceList runtime.Object,
 	return selectedResources, nil
 }
 
-func GenerateYAMLForComponent(ctx context.Context, transformedResources []runtime.Object) ([]ResourceYAML, error) {
-	var resourcesInYAML []ResourceYAML
+func GenerateYAMLForComponent(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
+	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
 		component := resource.(*rhtapAPI.Component)
 		inBytes, err := yaml.Marshal(component)
 		if err != nil {
 			return nil, err
 		}
-		resourcesInYAML = append(resourcesInYAML, ResourceYAML{inBytes})
+		resourcesInYAML = append(resourcesInYAML, inBytes)
 	}
 	return resourcesInYAML, nil
 }
