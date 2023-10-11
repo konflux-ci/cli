@@ -26,12 +26,14 @@ func TransformNamespace(ctx context.Context, fetchedResourceList runtime.Object,
 	for _, ns := range namespaceList.Items {
 		val, ok := ns.Labels["toolchain.dev.openshift.com/tier"]
 		if ok && val == "appstudio" {
-			fmt.Println(ns.Name)
 
 			selectedResources = append(selectedResources, &corev1.Namespace{
 				TypeMeta: ns.TypeMeta,
 				ObjectMeta: v1.ObjectMeta{
 					Name: ns.Name,
+					Labels: map[string]string{
+						"toolchain.dev.openshift.com/tier": "appstudio",
+					},
 					// TODO: Which annotations and labels should we have?
 
 				},

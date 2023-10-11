@@ -32,6 +32,8 @@ func TestTransformComponent(t *testing.T) {
 					Items: []rhtapAPI.Component{
 						{
 							ObjectMeta: v1.ObjectMeta{
+								Name:      "c1",
+								Namespace: "source-ns",
 								Annotations: map[string]string{
 									"image.redhat.com/generate": `
 									"image":      "quay.io/redhat-user-workloads/image-controller-system/city-transit/billing",
@@ -39,21 +41,45 @@ func TestTransformComponent(t *testing.T) {
 									"secret":     "billing"`,
 								},
 							},
+							Spec: rhtapAPI.ComponentSpec{
+								Application: "app-name",
+							},
+						},
+						{
+							ObjectMeta: v1.ObjectMeta{
+								Name:      "c2",
+								Namespace: "source-ns",
+								Annotations: map[string]string{
+									"image.redhat.com/generate": `
+									"image":      "quay.io/redhat-user-workloads/image-controller-system/city-transit/billing",
+									"visibility": "public",
+									"secret":     "billing"`,
+								},
+							},
+							Spec: rhtapAPI.ComponentSpec{
+								Application: "not-app-name",
+							},
 						},
 					},
 				},
 				cloneConfig: config.CloneConfig{
 					TargetNamespace: "foo",
+					ApplicatioName:  "app-name",
+					AllApplications: false,
 				},
 			},
 			want: []runtime.Object{
 				&rhtapAPI.Component{
 					ObjectMeta: v1.ObjectMeta{
 						Namespace: "foo",
+						Name:      "c1",
 						Annotations: map[string]string{
 							"skip-initial-checks":       "true",
 							"image.redhat.com/generate": `{"visibility": "public"}`,
 						},
+					},
+					Spec: rhtapAPI.ComponentSpec{
+						Application: "app-name",
 					},
 				},
 			},
