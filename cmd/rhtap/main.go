@@ -31,13 +31,9 @@ func init() {
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.SourceNamespace, "from", "f", "", "Namespace from which the Application is being cloned.")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.TargetNamespace, "to", "t", "", "Namespace to which the Application is being cloned.")
 
-	// "overrides" is to be used for embargo workflows only but
-	// they aren't very useful since the user needs to authenticate with the
-	// private repo interactively
-
-	//applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLOverrides, "overrides", "o", "", "Overwrite the source code url for specific components")
-
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.ComponentSourceURLskip, "skip", "s", "", "List of components to be skipped")
+	applicationCommand.PersistentFlags().BoolVarP(&cloneConfig.AsPrebuiltImages, "as-prebuilt-images", "i", false, "Export components such that they could be imported as pre-built images")
+
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.OutputDir, "write-to", "w", "", "Local filesystem directory path where the YAML would be written out to.")
 	applicationCommand.PersistentFlags().StringVarP(&cloneConfig.Key, "key", "k", "", "Local filesystem path to an existing encryption key")
 

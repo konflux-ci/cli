@@ -3,6 +3,7 @@ package exporters
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
 	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
@@ -46,6 +47,11 @@ func TransformComponent(ctx context.Context, fetchedResourceList runtime.Object,
 		var transformedComponent *rhtapAPI.Component
 
 		if cloneConfig.AllApplications || cloneConfig.ApplicatioName == component.Spec.Application {
+
+			if component.Spec.Source.GitSource != nil && shouldSkip(cloneConfig.ComponentSourceURLskip, component.Spec.Source.GitSource.URL) {
+				continue
+			}
+
 			transformedComponent = &rhtapAPI.Component{
 				TypeMeta: component.TypeMeta,
 
@@ -53,14 +59,23 @@ func TransformComponent(ctx context.Context, fetchedResourceList runtime.Object,
 					Name:      component.Name,
 					Namespace: cloneConfig.TargetNamespace,
 					Annotations: map[string]string{
-						"skip-initial-checks":       "true",
-						"image.redhat.com/generate": `{"visibility": "public"}`,
+						"skip-initial-checks": "true",
 					},
 				},
 				Spec: component.Spec,
 			}
+			if !cloneConfig.AsPrebuiltImages {
+				// for embargo flows, this annotation would be skipped.
+				// for backup and restore, this annotation would reset the robot account token.
+				// for re-target namespaces, this annotation would create a new image repo.
+
+				// TODO: match the visibility of the original Component/repo.
+
+				transformedComponent.ObjectMeta.Annotations["image.redhat.com/generate"] = `{"visibility": "public"}`
+			}
 			selectedResources = append(selectedResources, transformedComponent)
 		}
+
 	}
 
 	return selectedResources, nil
@@ -97,4 +112,14 @@ func GetComponents(ctx context.Context, namespace string, cloneConfig config.Clo
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/components", namespace)).
 		Do(context.TODO()).Into(components)
 	return components, err
+}
+
+func shouldSkip(listOfURLsToBeSkipped string, sourceCodeURL string) bool {
+	URLList := strings.Split(listOfURLsToBeSkipped, ",")
+	for _, url := range URLList {
+		if url == sourceCodeURL {
+			return true
+		}
+	}
+	return false
 }

@@ -91,7 +91,7 @@ func exportResources(namespace string, apiExporters []exporters.ResourceExport, 
 			if err != nil {
 				return err
 			}
-			allSensitiveResourcesAsYaml = append(allResourcesAsYaml, resourcesAsYaml...)
+			allSensitiveResourcesAsYaml = append(allSensitiveResourcesAsYaml, resourcesAsYaml...)
 
 		} else {
 			resourcesAsYaml, err := apiExporter.GenerateYAML(context.Background(), individualResources)
@@ -147,7 +147,7 @@ func exportResources(namespace string, apiExporters []exporters.ResourceExport, 
 			// IF key is not specified, write it out unencrypted.
 			// Log a message that this isn't recommended for
 			// backup-restore mechanism
-			_, err = encryptedFile.Write(yamlContainingAllSecrets)
+			_, err = file.Write(yamlContainingAllSecrets)
 			if err != nil {
 				return err
 			}
