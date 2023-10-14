@@ -1,0 +1,2937 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    application.thumbnail: "1"
+  creationTimestamp: null
+  name: build
+  namespace: shbose-tenant
+spec:
+  appModelRepository:
+    url: ""
+  displayName: build
+  gitOpsRepository:
+    url: ""
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    skip-initial-checks: "true"
+  creationTimestamp: null
+  name: image-controller
+  namespace: shbose-tenant
+spec:
+  application: build
+  componentName: image-controller
+  containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:afffd9a56cc134e42b6ff5ee222a2d4a15cc74ba7302421532d39422fca6cdfe
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 50Mi
+  source:
+    git:
+      context: ./
+      dockerfileUrl: Dockerfile
+      revision: main
+      url: https://github.com/redhat-appstudio/image-controller
+  targetPort: 8080
+status:
+  gitops: {}
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    skip-initial-checks: "true"
+  creationTimestamp: null
+  name: syft
+  namespace: shbose-tenant
+spec:
+  application: build
+  componentName: syft
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 256Mi
+  source:
+    git:
+      dockerfileUrl: syft.Dockerfile
+      url: https://github.com/redhat-appstudio/build-definitions
+  targetPort: 8080
+status:
+  gitops: {}
+---
+apiVersion: appstudio.redhat.com/v1beta1
+kind: IntegrationTestScenario
+metadata:
+  creationTimestamp: null
+  name: build-enterprise-contract
+  namespace: shbose-tenant
+spec:
+  application: build
+  contexts:
+  - description: Application testing
+    name: application
+  environment:
+    name: ""
+    type: ""
+  resolverRef:
+    params:
+    - name: url
+      value: https://github.com/redhat-appstudio/build-definitions
+    - name: revision
+      value: main
+    - name: pathInRepo
+      value: pipelines/enterprise-contract-redhat-no-hermetic.yaml
+    resolver: git
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-27skx
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6d034e27e9da3be810c80bddd262264769a904ccfc42a7807520f38507c27d3a
+    name: image-controller
+    source:
+      git:
+        revision: d51dfc90c75fff99f273254a8dc66075bdf8dba7
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-2plc2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:cd6ad4a335d5d29f7f365a7a362acbe0b6be5f01520f99ffe065d7bb3c0348f1
+    name: image-controller
+    source:
+      git:
+        revision: 46a35a98f3f7c463f20bb0af728739c7cc21de6b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-2qsh5
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:35df3c771bd1eef9d4e6b5a4dba5f2d66241e1f6cb5d7fe24ce082fde15525cf
+    name: image-controller
+    source:
+      git:
+        revision: 043716b6e292f445ddd2ba74a214d9fd934d1f25
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-2sjp5
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:cc611647a9a116b8c6b8086f4f2f01f1710d4062a90f9aa3a2acaa9a47d90b79
+    name: image-controller
+    source:
+      git:
+        revision: 32da0f93e0c00cabcfe3e342c67eff6f5110d457
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-2z4dn
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6aec7bb8f6e5d7f21b1d991728ce8fd5165da3fb04c9b267784007dff7a460f6
+    name: image-controller
+    source:
+      git:
+        revision: 87dae2edf7ba94072b769e5da475dfae0307d6b2
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-4fk25
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:ddd1c14c3e03c97084c9948f5f5bb2ba4c8968977b556e699ecc53312493446b
+    name: image-controller
+    source:
+      git:
+        revision: 284d6adbc46d2ef79fae55eb7e2578637fb9a2fe
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-4k9fs
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:f292a484f93f5e40365a42c472da28e5af3b004b67128bbd68ac9208c51d9889
+    name: image-controller
+    source:
+      git:
+        revision: 461fac2ed1d0087c2ed43da3d60db14104532686
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-4nd5j
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:669835d215ca2a2e4b092fe0dac50777b144ec4b335df42a243ecd0db35c3a4b
+    name: image-controller
+    source:
+      git:
+        revision: e1d5c3441934c1eb1714062c24aeea0bc1aeefff
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-4p9ls
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:86db1e434cb715bbf3469919d1281832529d89dd0dd12e6981db390ad0d42747
+    name: image-controller
+    source:
+      git:
+        revision: 9c4e21bd150d3a7f2a34eb018bbc3c4cd93682ad
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-56fdb
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:aaea490068626f3b82f57df70c765f8c10819f34ada5a265017a0f297d318666
+    name: image-controller
+    source:
+      git:
+        revision: 197c2589b29a38127744e1e3e0d1ecf71c043a9d
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-59krk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5246d75a8267868881d592b06f6b428f6592db09fcc0c35b7bffd756229412e7
+    name: image-controller
+    source:
+      git:
+        revision: 3dc8f559710338d144518fcb593fc1a01daca375
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-5qdbk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:1192860e82dbfda9d174238a9d289816f92a7cbba6113bbf7f2d512d507a67aa
+    name: image-controller
+    source:
+      git:
+        revision: acf92c5151a5d0267a74226691c62897aaa9ee57
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-5xzpb
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:bfe8bdb38c17ddf36462f795c81a4ab49f38297b7f362a94d36c4a928caa109d
+    name: image-controller
+    source:
+      git:
+        revision: d13a0e7b296ca3acc62ae0b8b3d9825dbb0bc260
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-68kh9
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:74a271707cbe4eafa2dff42246482f2ee738a6cca87f3d71bfbe4a3d0dc7d9a1
+    name: image-controller
+    source:
+      git:
+        revision: c8ff98a83f1752c08daa6fa5993d0a6bc1f0b263
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-6kxf2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:951069cbb4758121ccbed05ff808423fd29a99f73fd977add1f71ee04f92e28d
+    name: image-controller
+    source:
+      git:
+        revision: 695d14ff9dd6850f9158c7d63a6bca304da26ac7
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-6lcm9
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0e1fd4fb99167ed58e5adadd9b9b12ba9d29effb5f6cd5b5ac25559b8c59bcd7
+    name: image-controller
+    source:
+      git:
+        revision: 7e3880a3407a6146a7eca81d3a7394d7f5ae04e8
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-6wmzh
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:578593cc6e26dba286f54928cf9f926b34e7328331ad4bf0a407f3d369f90810
+    name: image-controller
+    source:
+      git:
+        revision: 49b873c8c47a5364b4d4fd4da0f9a14d4fd13a81
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-6x2jv
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:39b5e7c3920ab3aa21c63215f64f4010a1a625c0cb791bd2d674b93e52757fe4
+    name: image-controller
+    source:
+      git:
+        revision: cfff837fcbeb039799cc6001be80bf1fd5e2fd03
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-72w2c
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:e0e42d7d6ccf44d5e39268f8a0ab484ba4b4e20460027f4c9beb93e29c635cea
+    name: image-controller
+    source:
+      git:
+        revision: 991655730bed943496350ba2caf93be5af59f6ca
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-78259
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:26beaa767394d0bb140dcc87e69d2a365a6ad4ea48649146e9227303f9c22ab4
+    name: image-controller
+    source:
+      git:
+        revision: 32c7afbbf428a5f4dc83dff733f1fe1c51c8f3ba
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-7fzdp
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:e8b95f2dd80ad20a81e0927bbc4e6897585d1a5cb2bcf7a8bb395bc3f1c928f1
+    name: image-controller
+    source:
+      git:
+        revision: 872f7122d869effa28a197ef06823c280bc33476
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-7k5lc
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:2fec403a6a1289567f19bffc8754793ea41724618a9c23979cf177cbcdb21c29
+    name: image-controller
+    source:
+      git:
+        revision: 9e9021e17ad969ede7a6806a123b05bc54202abd
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-7pkvj
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:a7e0becf5638856cda481364a87cd4cdede341e82f91c2fb5df493924b32bda0
+    name: image-controller
+    source:
+      git:
+        revision: 55267f7605df25a07deaca6a64aafc92357d58f3
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-7tlmk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:a11e52608821dcd283da9bc901956a6e1dd083ea5ad609a25c86b5534091c7d5
+    name: image-controller
+    source:
+      git:
+        revision: 8e0da94a012c392ec6bea51a50bbcfe4d68ed4d2
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-7vp99
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:054b20d130011083bc935281418c90428731ffbb768b9cd495b90949b80896e4
+    name: image-controller
+    source:
+      git:
+        revision: 84003489deb6f9124f6b050f5a34c59027db1f08
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-8dtg2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:17e6532c613f263f752a37fb6356d115a6e2aec1c3c45e358d0baff572dcaa25
+    name: image-controller
+    source:
+      git:
+        revision: 241600382b554c7aa5d1895ece13b098a01b8fda
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-8gxxf
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:fc76c1dd97b76cd7abfe80078d95e4f7129e35a02c0fa6d141612e5f4412eb73
+    name: image-controller
+    source:
+      git:
+        revision: 0ad143637b0279697dd1cedae04b7b607bfead06
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-8jc7s
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5e9fc1a917c429b5cfd2b9d5c302ec10f1219037599e186fd798311424b4c604
+    name: image-controller
+    source:
+      git:
+        revision: 28e8f70a63bcd568e7fcddc6aeae16e12dc82ee3
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-8vj27
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:99859dc90bfca8f807fb8cac256d5f586496d1cb16699a906ab961a972c02227
+    name: image-controller
+    source:
+      git:
+        revision: 68de96424e869439b3f0006a33fdd3d64ae5a600
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-8wgsf
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:2537a925a952657d188cd7d00061f0c758ceb90c1720a7fa8faa57aae087783b
+    name: image-controller
+    source:
+      git:
+        revision: 5e8af93c591b0e8356250c8779b84fa1f7660490
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-8wvz4
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:54fe4d0295430a3d2241d8f1ddceaa2cb9df00f2683a79456fbb12a9f92fe42d
+    name: image-controller
+    source:
+      git:
+        revision: 8d7ac89478825479e0e4c92272376e19a3227d73
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-98zrj
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0c910001c77d75e4074bab62f55e07b9eb2a1f2817ebbef0ed834d15aaf35377
+    name: image-controller
+    source:
+      git:
+        revision: b3d6183cd5b5c2e3385814ac132282616d3e2043
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-9brwp
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:7f37a7108d4975489b196da7f105f56874db5ee5720e15a064e14e0ee5d98e69
+    name: image-controller
+    source:
+      git:
+        revision: 84003489deb6f9124f6b050f5a34c59027db1f08
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-9hzt4
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:fe9ac019c5eda00650fd8f8b811ac6f4faeebcf21c7b6c212989f4dc83970a91
+    name: image-controller
+    source:
+      git:
+        revision: 89fb4ced1293867d0ba743d7024c4f09b13dee2b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-9ld8v
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:89f4582d8bb1de9ca35ddfa5ae21fc17969b619caf28112f3ca236ee74c17fc9
+    name: image-controller
+    source:
+      git:
+        revision: e1bb1f09c373e5cb065dbbe92c9564903a8290d4
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-9nzrn
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:aa383825434e6b33564f6e4583a74902cfe8d3e98aff57aec6dad1618daba221
+    name: image-controller
+    source:
+      git:
+        revision: 74e0d4bb54541500b73e9c563598dec529e1a0ab
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-9pbr4
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:acbab84d9a0efb73609a4b8d45480030810d0892f37208d9072109c394a83fc8
+    name: image-controller
+    source:
+      git:
+        revision: 1a46fc81784550945dfad2f23117bc479a8a807a
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-9qxq5
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:9b8ac5f3734ff171f1c50fba960dea8105666ff5e79ea548b0ef088207247e82
+    name: image-controller
+    source:
+      git:
+        revision: d66f0b162dd062c13aeca0b7873199baa16c1d23
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-b5qhj
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:2ea0439092ea9478cf722c052a5326eb5c6d8e80d12cce42cd6e039f77c82fef
+    name: image-controller
+    source:
+      git:
+        revision: d0c0c4367dbc235de28a50f37b675927d8f294e6
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-bc4p4
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:d13c9c495ea6ada2b1668c2db746a0e121731a29b366ec4b79eaf7892dfdce0e
+    name: image-controller
+    source:
+      git:
+        revision: dee695db9bb2bf85fe9caf274dafaa18b26bb357
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-bcd4s
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:94a1d94c20adf6d4a4b201ac243c55641a2585705c4424879ba828dd13d110c1
+    name: image-controller
+    source:
+      git:
+        revision: 1f95b1bbc719f6c2728be7b174608c77b4c42f0d
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-bfn5k
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:afffd9a56cc134e42b6ff5ee222a2d4a15cc74ba7302421532d39422fca6cdfe
+    name: image-controller
+    source:
+      git:
+        revision: 35f1168100168e084b5eef009fa816da3c29217c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-bgspc
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:479425a6bbf4855be42e79f19382c6759bd1b3521c2845e3d599b0b82c8d4a92
+    name: image-controller
+    source:
+      git:
+        revision: aac6053f56464a04b8df196bd6a0e2e0304ef678
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-bmscx
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:9ba41786290a2c9e5b031905c6b9537d67b31a4a8cdb21a108fe85af3a2970a9
+    name: image-controller
+    source:
+      git:
+        revision: 4b93d28c5849e4007b7d915a4ec7ffe29723088b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-bqjmv
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6aaf6dfb6fc845e47b21ca0bd6221db917e44a97fda12e45eeebd69f34864a08
+    name: image-controller
+    source:
+      git:
+        revision: fba9424121342c8a5ff88b53edff97b21cef7959
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-btlwx
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:034d4724cbceca6d30db4cdd6cc69eef8f402c5eec1ebd719bf9e908d6dcb03e
+    name: image-controller
+    source:
+      git:
+        revision: eb6ca806c871f01d8a80c37120c85e84e384ccdd
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-cphfq
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:4997eae29f2c62230219666977c7a2e339d9be3af4e49efcd4872d0316fc281d
+    name: image-controller
+    source:
+      git:
+        revision: 112f3c7fd694d7c7d14d5abe2a303a317023fbf3
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-crprh
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:ab9041e71d92e4c5f66805049c1326bee3cf1438958cee696544562be2aaf516
+    name: image-controller
+    source:
+      git:
+        revision: 59d84276b3cd439399e6dade993e1fc28b2e2f97
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-cvx8c
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0b52e6de5c4aa98e5804b3679dbb55228b63b1175e3e1093d2a15ae1c313c497
+    name: image-controller
+    source:
+      git:
+        revision: 2429b3ae2b78d528522cad9a747129ad593fdd7d
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-cxbj8
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:8387a5104e0d0a37be197d31ed5a32622d3ab7e27d101e4bf3ece94f6860c68d
+    name: image-controller
+    source:
+      git:
+        revision: fca38a2623af6cb8c866405062fb8ff19658556d
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-d62tr
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5275a2af41fd5aed8b1e3d0c5e3834b006a1327feaad69b0be82b723a7663a4d
+    name: image-controller
+    source:
+      git:
+        revision: 73c2ab3deb651ddfa0f1b48cfb5f20578f21c00d
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-f45sk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:f5825636e2d8fd9c875702f1335d0394485e8eef0b06693f4a2f4128fdcf02ff
+    name: image-controller
+    source:
+      git:
+        revision: d54931454d9a620c17bd775ad081a550c0ab62e0
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-fhggx
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:356ac96fe5f7a648ee4387f7fc4b67bc79141b885450fedd8af506364546859a
+    name: image-controller
+    source:
+      git:
+        revision: ea522367ed1f0a15325c861d554e4b9fa131762c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-flp69
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5f833d1b8402db32c4e5324935e97a5b766993c55c869eb10137a70b39e0035f
+    name: image-controller
+    source:
+      git:
+        revision: acd0a276bc6a4c07b28ab84c41468d75595533c8
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-flpqm
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:916df96f3ecc06d69852220e0ef06f8e83b84ed6e20659b3e1c2e2413f844cde
+    name: image-controller
+    source:
+      git:
+        revision: ccd0ee231f8d37c500d292c906f2ff1aab07b8c8
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-fshld
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:2642ea07ea595821ce013880f35f93fa6b0cb0618c7b9bc480bdad15caa1b66d
+    name: image-controller
+    source:
+      git:
+        revision: fe1aca049c0539804e9abc66eba9be3ae12c16ca
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-fsxgf
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5c24ffc722d4ec4b5fad71775de2d97ce5c4b8ec140596ad538142b7929dc024
+    name: image-controller
+    source:
+      git:
+        revision: add4b9378081828fae4ab82c44bb6c90e0b07cab
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-g6hft
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:2ac93c0b24934651c67a7f1be37a1687db8366e2ebf9762afe2c80e988e096cf
+    name: image-controller
+    source:
+      git:
+        revision: 04a35808295aefdddc633878e83bd22c2d4959e0
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-ggq8v
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:36a14e84df2434ed25c146e76c61700ffd57f7a6ddeec442512d069ad0857d7d
+    name: image-controller
+    source:
+      git:
+        revision: 597947f69ea3cf0d49a9deab7209d571e768b4dd
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-gkj25
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:9738cbcf72ef448427c0a6b577422be2ebfc2265bb80c266b6eb10a9b10887d6
+    name: image-controller
+    source:
+      git:
+        revision: f288b7b927f73ad83bb90db7db9944d8bdc2939f
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-gm4tg
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:72528d6280c2370557f1de699386c7cfbc869bcc7fae7b02cb95fc645a677fa8
+    name: image-controller
+    source:
+      git:
+        revision: 6faf1dcfb8d5d8365e9cc1e44bf7502bee741181
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-h6ncw
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:4dc170ec193d9da6d04e146a2eda9cc746f53a42a0bafbc042a14604977c6937
+    name: image-controller
+    source:
+      git:
+        revision: 5b7e35dd3ef9974a8ce112be82e1a34eb3d1edb4
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-hfppq
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:ebd52fcead8b053376a32e62c57b174e62cb4d6dd292046fa45fba4c270d1ca1
+    name: image-controller
+    source:
+      git:
+        revision: 94f2fba02bbd4a0ba7366202bbcb29b7ab22dee2
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-hthj7
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:008e968eee07a8cd46cceacbecbfb7f8410ebe6d3babbdcb79a9ffe7ba899da0
+    name: image-controller
+    source:
+      git:
+        revision: 9a582283d152bbc95dff5034ac5c04895edd4b46
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-htv98
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6f49cefada1d119ddd9d6d363d210c1969629895e9a3c4a0fbfad45f9b6ddd3e
+    name: image-controller
+    source:
+      git:
+        revision: dff73dcd658ba95a226c1a072e3fe0ca847f56c1
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-j2v8q
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:3a7ed3ff0be6ad6e3e4bbceb9ba57d44cbd8f1cc5b2fd4f1408abb5b41a2e619
+    name: image-controller
+    source:
+      git:
+        revision: 3d555b0279798e53455cbbae479ff77b66de3642
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-jr26c
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:c821d4e5b77b49f5a96ee7e4ac12db4fa3ed1c4525680740ce5dad892ddc26d7
+    name: image-controller
+    source:
+      git:
+        revision: a6d3437aaa1159760125e1a538ade808da24ec58
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-jrqhk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5e5bf4e8e6eb253203a7985c383caede68cf3df84e09bf20f67dc14f6849618d
+    name: image-controller
+    source:
+      git:
+        revision: 19339acbb1b2dd738ca84c91233d0a9071fce0cd
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-jrx9w
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:860c024b5c6d9e980a10603a6f293594eeb176f33958c4f5c2690c6f3bb2aa54
+    name: image-controller
+    source:
+      git:
+        revision: d6e52e84502be7b713d3046a2d49e5f9271a4698
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-jtqmk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6cd72e06733917c8c8074b7f3c5ccc49b45075bfae79690abe76a586d07ebafc
+    name: image-controller
+    source:
+      git:
+        revision: 1da25ac757a4fc8d00bdfd0ee344cdac3f2a08a8
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-k2g5b
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:773300c93631f82d81d9375db0609e6dba0d5968e0ad46dc0cfd35adac422a89
+    name: image-controller
+    source:
+      git:
+        revision: d6a01cea9410b41772b5db8f488b7f602125cde2
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-k2wwz
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:92739167e8ef87c8c281b06f0f63fe0aacbc57c30b7824e5484be869e424a983
+    name: image-controller
+    source:
+      git:
+        revision: 6e230b36f67c18c2699961afb1e221ff979cc902
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-k7lkm
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0e1bc71b3c78bf7949b99471cb23b0ba0a87bdc0a3e46de40582422facfa4484
+    name: image-controller
+    source:
+      git:
+        revision: ed14ef8eaa6e3cb0fdd078722ce1919fe1423627
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-kdpms
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:e1b8d69b4de0d90187db4ff288fb01fc67886f74e07819d414ad60f07ab22fb6
+    name: image-controller
+    source:
+      git:
+        revision: 33340059df7f628b9ae8e9c7631d2cfa96165adb
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-ldtnl
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:216640170536415e080b9e5a46c9f0c63a1413e0e521517945ce7604a25600fc
+    name: image-controller
+    source:
+      git:
+        revision: 78a58a5f6ea998dc2236ad71755b9f6490add20a
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-llc54
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:24f4d68aa749a91e3449c6708dee041b98a17d87ff71241cfcaaaaa7977883be
+    name: image-controller
+    source:
+      git:
+        revision: 64a3f951b71d702a03d4664c5591b7e2027ca308
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-lt8kt
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:faf1585ee0c0002002706003728d8d52c6ddfa5cc03c290b52c4282a02a32dd8
+    name: image-controller
+    source:
+      git:
+        revision: d7493da4a7450dde4c6079668ee8e4ceb17e716c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-m46zw
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6a9c0b6eea75a6bf5d3f0f335eaef4dea4d612529c63bc9ec4a6a33c99ad4e7d
+    name: image-controller
+    source:
+      git:
+        revision: f53cfdcbbd35adba9855ab75ffb505b7bf798e30
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-m6rrq
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:a5fa414f75a29ac21f4d25e30f7f9ef14f5ebae3493dab6769b48ef18bc651e9
+    name: image-controller
+    source:
+      git:
+        revision: bc0176b771808dafd3a6788acbdb80deaec22b3b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-m7tb6
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:45622922fc85e95a032c772e6dc60cc70a4a1c950c495f2aa8beb6fe13125032
+    name: image-controller
+    source:
+      git:
+        revision: 0fb31e647db29e0b0fe1a579d9447968e18d9647
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-mcb5q
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:e7dbe14ab85eb24cbf6640f75f9616da7f181ce358ca1404c7fe9349360890f9
+    name: image-controller
+    source:
+      git:
+        revision: ef227b94af890ce84dd3a879756a2adf51c33524
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-mhbzz
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:b876aa8f76e063801f114ef77d96a519e007dcbd8f8209cf61b4b034d137b9f2
+    name: image-controller
+    source:
+      git:
+        revision: a60e04e0fa337471b2e69011cc0b5672f2ad1183
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-mml6g
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:061090a2293a5630bd55d86c2bfa8ac52184e4d68fa6baaabc9e685da4b737b0
+    name: image-controller
+    source:
+      git:
+        revision: ea6b104f9626c1f44c7bebeba20cfae2c9f05b60
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-ms7x4
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:af5fff4857dac5abcda63fdfa30a67e48b0472e2ccf9a24f76e8be7338398580
+    name: image-controller
+    source:
+      git:
+        revision: ce4dd5533b723b5a14f27d53062fb1a06279d4da
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-mv5cp
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:bdb5db6e0c860a773a06435e3e87520caafea60ed3ab8a1c2d578e80e3b021cc
+    name: image-controller
+    source:
+      git:
+        revision: 597947f69ea3cf0d49a9deab7209d571e768b4dd
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-mx2mk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:41d63410c5bae6df4ccf95b146dac8505ecee49c709f36bb5655e8d1b6f1d8fc
+    name: image-controller
+    source:
+      git:
+        revision: 48893226ba8bce1249cac6d2396596f6f3260a9f
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-n6gbz
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:9b5aee8c329826384583721fef48c839b2fe0690f2d56a42c5e4149411087287
+    name: image-controller
+    source:
+      git:
+        revision: 5302031a627a8f5db827fe3664772885a26b4cbb
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-n6txz
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:03a8a7e5de8bb6c9d5a60e93e75b61e15e6053e903944a7cb741cd4062c0c53a
+    name: image-controller
+    source:
+      git:
+        revision: 2d57e93076ca42fbbe7ca75c93501cef8a102239
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-nc6ms
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:320494ee363e7bd677c48789ab38425d9f9e8f36df8e17e4230ee3343301db11
+    name: image-controller
+    source:
+      git:
+        revision: 00a4f1a14f0267d48217100725880db94979b978
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-ndg7b
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:095a9f1894c510582dc8e9c33fc01ba6af614d31717f06d08b9998ed528e215a
+    name: image-controller
+    source:
+      git:
+        revision: 50e6be60aebd150e1cf23a5450c2d67ec617fc70
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-nfs49
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:17fc5f6fca85d88245ca23b124c32a046618e0523f8cc910e23c9a40c01d4a04
+    name: image-controller
+    source:
+      git:
+        revision: 84003489deb6f9124f6b050f5a34c59027db1f08
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-nl8wd
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:37228b2009b08aaf6e352cd1c9b5e5f3389f06e05b815e845f3c662cdf0cde57
+    name: image-controller
+    source:
+      git:
+        revision: e3e5859e0ffdbed3c4ef0bedf553f1d54f8ae4e7
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-nnf4p
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:13ad639297722402dc594bfd1b61a4124ce2ddca6e1e97f8656c525d05f00717
+    name: image-controller
+    source:
+      git:
+        revision: d778278518f755f46ceb07d4c31ddd4f4064bf84
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-nzpf7
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:577152ff80096d3d456c207aa6f1b3d55e496ad0381153b1fee5c0bfda9c4899
+    name: image-controller
+    source:
+      git:
+        revision: 84003489deb6f9124f6b050f5a34c59027db1f08
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-p4kdn
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:c2439266dfe78a3c9058024853afb503908e0c85df1830f35f2a5375ee6d21dd
+    name: image-controller
+    source:
+      git:
+        revision: 123c58bd4b8d9ab31fdcad016ef71ce721ed7b3c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-p9hfl
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:7164837f9e475b518e6bf0007d54b17f465fdd87414c0cad347cbdc9cd300e2c
+    name: image-controller
+    source:
+      git:
+        revision: b0157c96448ea4f941b73a4d07d2eb9684905e95
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-pb625
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:25fa1321eb8d6a2e68981ac7297d40881f49acd0bdaac56f0df0dc2c2f3f7682
+    name: image-controller
+    source:
+      git:
+        revision: b72217762de16b1c85c7084bcb8846c1e05d712b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-pgk24
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:8f0947c348c1be107016d74cdfc3c86c7dd9a121825cb965b36fe38ec16f8138
+    name: image-controller
+    source:
+      git:
+        revision: 77c6118b06b76ea7867b362612f3934dc634f38a
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-pk6d6
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0a52b14292582870e2d7daf646e3976969ad69e497e4e881b108d1b88b334518
+    name: image-controller
+    source:
+      git:
+        revision: d9eb5a031c282a68787694784064f4ae0204a049
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-q2nsc
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:094a7dee6efde18e2989d40e14af117c8fe913b884ca03a85b22f191a80024aa
+    name: image-controller
+    source:
+      git:
+        revision: 7017680935227e72093b70b007cf1a4ce902e96b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-q4zgz
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:f253f7f4bec391194075df305c014c18f2a1afa283458e7f96c6341a7e9e44c8
+    name: image-controller
+    source:
+      git:
+        revision: e6117a82599af333e567ace48e38c952a81b0646
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-q4zq2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:4e7b891f5be8675da7d1846bafd24fa012f9caec6d5198da8437e69d8bffd713
+    name: image-controller
+    source:
+      git:
+        revision: 843b52fbcd7a1ae59f93ce2c8574c7cf82ed3a20
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-qc4qh
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:4c6484f87d0f44af499b7e1c13647caf87441c31831dffc6b5d375810f40f244
+    name: image-controller
+    source:
+      git:
+        revision: d7a278661b15186454dc9681cfd1da15b5c08fe6
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-qh7wj
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:a322a2adb76491d8db76ae78bc764f8430e5d0c99039c624112284af9e7d5e43
+    name: image-controller
+    source:
+      git:
+        revision: 2b2e5a559a38bcc897ae3a822037fd12ae0670d9
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-qmdw5
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:79873741d8175b955aba137d740e5e6627e15420b92d8a1177721a3135651053
+    name: image-controller
+    source:
+      git:
+        revision: 409c1da4b8a91793a1e543526aea511834354eda
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-r5rzb
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:87e1515270206d551cd58e13b21cb429fa2da2b91dfb76cb6cc9cba3b3d9af41
+    name: image-controller
+    source:
+      git:
+        revision: 03c5e8347cb1f42dcf6fe3a43fed077eecb542d6
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-r66b8
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:89de2c1b0f72b1d965e9fa818da3876809897eea4328666283c9d6c60bec9219
+    name: image-controller
+    source:
+      git:
+        revision: ed14ef8eaa6e3cb0fdd078722ce1919fe1423627
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-rfhkx
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:f0acaf2bef3cddaca0d355b4a7245b739e683c87a387356647ff6e2d48a3ead5
+    name: image-controller
+    source:
+      git:
+        revision: 5acf9f79a57c6a9ee5465fba30ecf3494e00159e
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-rfs8d
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:c0e3f3f82da992aa5300c871024845d2f452235e7f819a851429a12e313ace3a
+    name: image-controller
+    source:
+      git:
+        revision: fff0fd342f296901edfaec9dfa1a464138a8f7d0
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-rkhhd
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5f01a299dfb2c7da26cf74283f4a097bc6c302d530b64ea58e7551d89d810896
+    name: image-controller
+    source:
+      git:
+        revision: 7153b3edfde9776a7ef1ad1b42823e4cb8e330bd
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-rrqv7
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:8b5c3db3a902cbbd63b759c534e997b54c7720528e89d853fa7bf78b716229e5
+    name: image-controller
+    source:
+      git:
+        revision: 27e85894414a4453c342c7e8baae79b05565ae75
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-rzqs5
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:4bbb311b700f5989b7de6e31dd80ec41b8a7a400e0e8d3113413ee705b02f302
+    name: image-controller
+    source:
+      git:
+        revision: f08a882006532916d9eeff498c1a258652e7591f
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-s46zf
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0ae9465b31d7caef6179ca2b2b293c4c683f2f14443db0cfed78ebb9e5fb7670
+    name: image-controller
+    source:
+      git:
+        revision: 1f69aba0173a2570d53f154b49a8f423e87bb66f
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-s9dl5
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:e9134ab794dbbfcf3564501a30f277eeaed84b199d0dc8e2af8f35dea244ad58
+    name: image-controller
+    source:
+      git:
+        revision: e2a59a837b056a19398437e9049348e145a7780e
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-scbnk
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:bcaac10e0ccb18d0f70c6d9126169af0e219206b764658a4642b52e00f4e83d8
+    name: image-controller
+    source:
+      git:
+        revision: 29125caac8a04fb6539b1aa8d4d2a710b18dc7e7
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-sdph2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:a97f91f11df35c9516565d07fe298f2b7089c23b2e307089c7c169459d71668f
+    name: image-controller
+    source:
+      git:
+        revision: 80c7fdf3f1d82e988842c5dffe4bc22fcc2f52b5
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-sg57g
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:5b3fa452373d96aaaa8036361ce7aab36e97d54b7116be9d123b51dd225bdad9
+    name: image-controller
+    source:
+      git:
+        revision: 76e8b1719bcfee00b9c787fcced78252e6404e47
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-sgfhj
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:db5e6ce8f7f824632f739632139690bc039b66ceb9c2084892126c4eb74d561b
+    name: image-controller
+    source:
+      git:
+        revision: e3c720cec6519489c0d160863ce96e64b6b0b37c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-shhtb
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:cab0f788b228613b212e8edf6838f46baf59a1bb674b25eaa2181b3e61d7ae22
+    name: image-controller
+    source:
+      git:
+        revision: 9a582283d152bbc95dff5034ac5c04895edd4b46
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-sm7pb
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:afffd9a56cc134e42b6ff5ee222a2d4a15cc74ba7302421532d39422fca6cdfe
+    name: image-controller
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: 35f1168100168e084b5eef009fa816da3c29217c
+        url: https://github.com/redhat-appstudio/image-controller
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/syft@sha256:a506e34b27b81e00686d0541b825fbf5aaa9b5c6f4c64491fe31562749935cf7
+    name: syft
+    source:
+      git:
+        revision: 64f068260306a9707536278271e0f82f5c8ef3cf
+        url: https://github.com/redhat-appstudio/build-definitions
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-sqwf4
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:3ded64cb467fd9c3df221a06608084ebd5128d376483c0dd8d108d221b37aaaf
+    name: image-controller
+    source:
+      git:
+        revision: 2276356813f7c7052ff30c6a818040101c810c57
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-svb8f
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:1ae8592c6b5c7ba472eca79baa4549cbbe2e96889670952aa6d2b0e5ba1bc4a2
+    name: image-controller
+    source:
+      git:
+        revision: 6b040e11be22f0e3fd5a10655402a84561d31929
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-t9jjc
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:833601950eee11dd02ebfdf60a580e914c198432d23ceb75d439bb5114319b17
+    name: image-controller
+    source:
+      git:
+        revision: d7a278661b15186454dc9681cfd1da15b5c08fe6
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-tktq9
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:96f193308151042221844508677893c0e725e1f30a69dece4eafd07ee54c6641
+    name: image-controller
+    source:
+      git:
+        revision: 4dc7badbfd9d9e56a2dcd249b592404389a9712f
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-tqwvs
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6a6b13e2edafc97f510e06538a1ce77c3fb917e0da2fad179cf6c88c3d77562b
+    name: image-controller
+    source:
+      git:
+        revision: 63f2fe11d1c2cc68e57483f4a7dab74c5b407de4
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-v8z2w
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:6313fe714c1f7b29d9049f86fe56a80eec4e626baf9298b8e9a29a5961b5f88f
+    name: image-controller
+    source:
+      git:
+        revision: 04a35808295aefdddc633878e83bd22c2d4959e0
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-vkx6s
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:189bf02b9b58adb1303bdc6e1e39fbadb8cf4b4ce7cde3c0b61375794b27e37c
+    name: image-controller
+    source:
+      git:
+        revision: c637c43573d721f72019791f44056a912eebe3c0
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-vq94r
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:51baa3475d17b7a0c04e844320f761fa81f9fcc9636c769436d7e824b1b3bef3
+    name: image-controller
+    source:
+      git:
+        revision: fcb47a49ec4a8ad8753eec80599f2aa6fd91ca77
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-vr22z
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:04150f10e8988c6bec194950d59fa8713d2fca4b9f830df966b817d84f4a7528
+    name: image-controller
+    source:
+      git:
+        revision: 7017680935227e72093b70b007cf1a4ce902e96b
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-vzgwn
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:810bc2ae2ba4f49df96f736f156e320c72ed9c8963d4ab6d078942c3d3f2be37
+    name: image-controller
+    source:
+      git:
+        revision: 75d3928646d293255b68b92f22630a3377b2b60d
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-w28qd
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:44f4e43ec3ab87655f3c6501819effae2b9c6c838f073d33f07cdcb4964a42bc
+    name: image-controller
+    source:
+      git:
+        revision: 26dcbd991c7f208b19c74a11f7b988baa4d18c85
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-w47vl
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:4fccfb030c572c4097a4e4089e0748887b46e998f5098a2b2ac03a3f82e92cb0
+    name: image-controller
+    source:
+      git:
+        revision: 21170b9de1b17b24e9cf7fe947f83330dd4385d9
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-w5gt7
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:c6ade5de8c613be388383ff639cc5338497625d19b2be81ddb12bed660bebd83
+    name: image-controller
+    source:
+      git:
+        revision: f7e2e7dac4e29db444953fd2bafad127fe2eb3dc
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-w7gc8
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:a9cf35ed7c0165a234ffd0792453c3e0bbeadda7a457c3e057df2fb3b36930ea
+    name: image-controller
+    source:
+      git:
+        revision: 383203b0ae0c72996b2504ea095cf6a76e283bc7
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-w8jr2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:d4f1f60387a3f43edebcd9d4e94f36e55f27b2901282d23861004218dae7cf3c
+    name: image-controller
+    source:
+      git:
+        revision: 6791410c570a4700c163d7ba369d96154be062a5
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wdlc2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:13f9a1bc08903974db130c18652f3136db1837b299a149cba563c081a73a571e
+    name: image-controller
+    source:
+      git:
+        revision: 63fd0ad5ed95e43ce61725aa3ab8d87d795e9a37
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wfxnb
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:afffd9a56cc134e42b6ff5ee222a2d4a15cc74ba7302421532d39422fca6cdfe
+    name: image-controller
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: 35f1168100168e084b5eef009fa816da3c29217c
+        url: https://github.com/redhat-appstudio/image-controller
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/build-service@sha256:ad4b9b2d25b31a8e37360113211de0ed5db2acdecced9b7663033d846fa1bcb9
+    name: build-service
+    source:
+      git:
+        revision: 979846e54d6190a8e672b9f9d84a0bdc0b626148
+        url: https://github.com/redhat-appstudio/build-service
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wgnl6
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:c70447a348b7f530db3d76373b7830e9010493ad6a4289c33709f937ca417344
+    name: image-controller
+    source:
+      git:
+        revision: 8e0f2fe1e4d8c33b3f0542592291d70e6d13229c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wlc7p
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:ddd71fc6477b631f6eb11cebf067d5ee0a662af901e218bb2c9431e007d1c0b8
+    name: image-controller
+    source:
+      git:
+        revision: 554b6ea3ddb148142efb7315e656534bfeb410b2
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wqzw7
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:165fbc2aff33127ceb559a9b608bb20dedb6766283f01edca8c5a742348c81e6
+    name: image-controller
+    source:
+      git:
+        revision: b369e728d3420a3b9aa17556d79c147e1d893ce2
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wsfs2
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:0caefc0ca08b847e272c9881b3bcc80ecae8481fcc9d804dae0d6cb773f178d5
+    name: image-controller
+    source:
+      git:
+        revision: a9acd8fefa35f998ac4f4e0fe75b14939caead48
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-wwjtw
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:1cb8b4e6a2bac035cc4c8850fedb4e68929ab38f5a81411d1a410b19e7d468f0
+    name: image-controller
+    source:
+      git:
+        revision: e7cdb307d7aee30a79ad4f3358b67c8e2799081a
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-x56xj
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:9d8809269e1acdb20b17935d9b44993f3b9c3ca96fa5405eff43c929afb8a9ea
+    name: image-controller
+    source:
+      git:
+        revision: 85defd1359fa7ce4cc97c49c46067f5fba4be754
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-xhdtw
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:fa4da74f873c58003f1545a33455ed9b81400cc39f7ffcef00ffcf042c46025f
+    name: image-controller
+    source:
+      git:
+        revision: 26dcbd991c7f208b19c74a11f7b988baa4d18c85
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-z5p7q
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:91b01d448236dc1e8e49c52d93e5468db4b1cea4e46444b6b17f1192a52dc0f9
+    name: image-controller
+    source:
+      git:
+        revision: c43d28db3265e39b14d4bd4062367139d5d2ded0
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-zc27x
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:f05a6b051dddafbf5e0595058c1917e6b16f27db8c3d5f690f29ca992b17131b
+    name: image-controller
+    source:
+      git:
+        revision: a5bd04a3edbed6fc6d7241713f110e2361ea96fc
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-zjf8b
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:673ca794551ee0e7fe57addf16fa5839d4f02fe39c1b87ff75893e23d1d5ba5d
+    name: image-controller
+    source:
+      git:
+        revision: 4501f792073f2c72c364dfcbbddf9e5b21b8f56c
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  creationTimestamp: null
+  name: build-zphqg
+  namespace: shbose-tenant
+spec:
+  application: build
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/rhtap-build-tenant/build/image-controller@sha256:9e88aca108bd9fc06878165aadc64e8cbbd6626c9aced82abdc838a049793b92
+    name: image-controller
+    source:
+      git:
+        revision: bb5211188a63b5a8b93dd26d91b4d5854cd165cb
+        url: https://github.com/redhat-appstudio/image-controller
+status:
+  conditions: null
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: SnapshotEnvironmentBinding
+metadata:
+  creationTimestamp: null
+  name: build-development-binding-bmxlg
+  namespace: shbose-tenant
+spec:
+  application: build
+  components:
+  - configuration:
+      replicas: 0
+    name: image-controller
+  environment: development
+  snapshot: build-bfn5k
+status: {}
