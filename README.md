@@ -45,13 +45,13 @@ Unless otherwise specified by the `--write-to` flag, the exported YAML files wou
 1. Login to your RHTAP namespace using `kubelogin` or `kubectl`.
 
 2.  ```
-    ./rhtap export application build  --from rhtap-build-tenant --to shbose-tenant 
+    ./rhtap export application my-cool-application  --from my-ws-tenant --to shbose-ws-tenant 
     ```
 
 Optionally, if you were to work on an embargoed issue, you could import all associated Components as images.
 
 ```
-./rhtap export application build  --from rhtap-build-tenant --to shbose-tenant --as-prebuilt-images --skip https://github.com/redhat-appstudio/build-service
+./rhtap export application my-cool-application --from my-ws-tenant --to shbose-ws-tenant --as-prebuilt-images --skip https://github.com/redhat-appstudio/build-service
 ```
 
 #### Encrypt sensitive data extracted from one or more namespaces
@@ -60,6 +60,6 @@ Optionally, if you were to work on an embargoed issue, you could import all asso
 Login to your RHTAP namespace using `kubelogin` or `kubectl`.
 
 2.  ```
-    ./rhtap export application build  -f rhtap-build-tenant -k /Users/sbose/keys/sbose.pub 
+    ./rhtap export application my-cool-application -f my-ws-tenant -k /Users/sbose/keys/sbose.pub 
     ```
 
