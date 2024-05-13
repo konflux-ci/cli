@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	rhtapAPI "github.com/konflux-ci/cli/api/v1alpha1"
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -34,14 +34,14 @@ func TestTransformIntegrationTestScenario(t *testing.T) {
 					AllApplications: false,
 					ApplicatioName:  "source-app",
 				},
-				fetchedResourceList: &rhtapAPI.IntegrationTestScenarioList{
-					Items: []rhtapAPI.IntegrationTestScenario{
+				fetchedResourceList: &konfluxAPI.IntegrationTestScenarioList{
+					Items: []konfluxAPI.IntegrationTestScenario{
 						{
 							ObjectMeta: v1.ObjectMeta{
 								Name:      "t1",
 								Namespace: "source-namespace",
 							},
-							Spec: rhtapAPI.IntegrationTestScenarioSpec{
+							Spec: konfluxAPI.IntegrationTestScenarioSpec{
 								Application: "not-that-app",
 							},
 						},
@@ -50,7 +50,7 @@ func TestTransformIntegrationTestScenario(t *testing.T) {
 								Name:      "t2",
 								Namespace: "source-namespace",
 							},
-							Spec: rhtapAPI.IntegrationTestScenarioSpec{
+							Spec: konfluxAPI.IntegrationTestScenarioSpec{
 								Application: "source-app",
 							},
 						},
@@ -58,12 +58,12 @@ func TestTransformIntegrationTestScenario(t *testing.T) {
 				},
 			},
 			want: []runtime.Object{
-				&rhtapAPI.IntegrationTestScenario{
+				&konfluxAPI.IntegrationTestScenario{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "t2",
 						Namespace: "target-namespace",
 					},
-					Spec: rhtapAPI.IntegrationTestScenarioSpec{
+					Spec: konfluxAPI.IntegrationTestScenarioSpec{
 						Application: "source-app",
 					},
 				},

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"

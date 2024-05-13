@@ -10,7 +10,7 @@ import (
 	"github.com/ProtonMail/gopenpgp/v2/helper"
 	"github.com/konflux-ci/cli/pkg/exporters"
 
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	rhtapAPI "github.com/konflux-ci/cli/api/v1alpha1"
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -16,7 +16,7 @@ func TransformIntegrationTestScenario(ctx context.Context, fetchedResourceList r
 
 	var selectedResources []runtime.Object
 
-	itsList, ok := fetchedResourceList.(*rhtapAPI.IntegrationTestScenarioList)
+	itsList, ok := fetchedResourceList.(*konfluxAPI.IntegrationTestScenarioList)
 
 	if !ok {
 		return nil, fmt.Errorf("resources of type integrationTestScenarioList were not passsed")
@@ -24,7 +24,7 @@ func TransformIntegrationTestScenario(ctx context.Context, fetchedResourceList r
 
 	for _, integrationTest := range itsList.Items {
 		if cloneConfig.AllApplications || cloneConfig.ApplicatioName == integrationTest.Spec.Application {
-			transformedITS := &rhtapAPI.IntegrationTestScenario{
+			transformedITS := &konfluxAPI.IntegrationTestScenario{
 				TypeMeta: integrationTest.TypeMeta,
 				ObjectMeta: v1.ObjectMeta{
 					Name:      integrationTest.Name,
@@ -41,7 +41,7 @@ func TransformIntegrationTestScenario(ctx context.Context, fetchedResourceList r
 func GenerateYAMLForIntegrationTestScenario(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
 	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
-		its := resource.(*rhtapAPI.IntegrationTestScenario)
+		its := resource.(*konfluxAPI.IntegrationTestScenario)
 		inBytes, err := yaml.Marshal(its)
 		if err != nil {
 			return nil, err
@@ -51,7 +51,7 @@ func GenerateYAMLForIntegrationTestScenario(ctx context.Context, transformedReso
 	return resourcesInYAML, nil
 }
 func GetIntegrationTests(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var its = &rhtapAPI.IntegrationTestScenarioList{}
+	var its = &konfluxAPI.IntegrationTestScenarioList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1beta1/namespaces/%s/integrationtestscenarios", namespace)).
 		Do(context.TODO()).Into(its)
 	return its, err

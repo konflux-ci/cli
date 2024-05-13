@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	rhtapAPI "github.com/konflux-ci/cli/api/v1alpha1"
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -16,7 +16,7 @@ func TransformSnapshots(ctx context.Context, fetchedResourceList runtime.Object,
 
 	var selectedResources []runtime.Object
 
-	itsList, ok := fetchedResourceList.(*rhtapAPI.SnapshotList)
+	itsList, ok := fetchedResourceList.(*konfluxAPI.SnapshotList)
 
 	if !ok {
 		return nil, fmt.Errorf("resource of type SnapshotList was not passsed")
@@ -26,7 +26,7 @@ func TransformSnapshots(ctx context.Context, fetchedResourceList runtime.Object,
 
 		// TODO: Discard all snapshots which are not relevant.
 		if cloneConfig.AllApplications || cloneConfig.ApplicatioName == snapshot.Spec.Application {
-			transformedSnapshot := &rhtapAPI.Snapshot{
+			transformedSnapshot := &konfluxAPI.Snapshot{
 				TypeMeta: snapshot.TypeMeta,
 				ObjectMeta: v1.ObjectMeta{
 					Name:      snapshot.Name,
@@ -43,7 +43,7 @@ func TransformSnapshots(ctx context.Context, fetchedResourceList runtime.Object,
 func GenerateYAMLForSnapshots(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
 	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
-		snapshot := resource.(*rhtapAPI.Snapshot)
+		snapshot := resource.(*konfluxAPI.Snapshot)
 		inBytes, err := yaml.Marshal(snapshot)
 		if err != nil {
 			return nil, err
@@ -53,7 +53,7 @@ func GenerateYAMLForSnapshots(ctx context.Context, transformedResources []runtim
 	return resourcesInYAML, nil
 }
 func GetSnapshots(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var its = &rhtapAPI.SnapshotList{}
+	var its = &konfluxAPI.SnapshotList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/snapshots", namespace)).
 		Do(context.TODO()).Into(its)
 	return its, err

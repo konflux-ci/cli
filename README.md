@@ -1,17 +1,17 @@
-## RHTAP CLI
-Command line for working with your Applications on RHTAP
+## Konflux CLI
+Command line for working with your Applications on Konflux
 
 ## Setup
 - `git clone https://github.com/konflux-ci/cli.git` 
-- `cd rhtap-cli`
-- `go build -o rhtap cmd/rhtap/main.go`
+- `cd cli`
+- `go build -o konflux cmd/konflux/main.go`
 
 
 ## Usage
 
 ```
 Usage:
-  rhtap export application [flags]
+  konflux export application [flags]
 
 Flags:
   -a, --all-applications   When set, all Applications in the current namespace will be cloned.
@@ -34,32 +34,32 @@ Unless otherwise specified by the `--write-to` flag, the exported YAML files wou
 
 #### Export all Applications across all Namespaces
 
-1. Login to your RHTAP namespace using `kubelogin` or `kubectl`.
+1. Login to your Konflux namespace using `kubelogin` or `kubectl`.
 
 2.  ```
-    ./rhtap export application --all-projects
+    ./konflux export application --all-projects
     ```
 
 #### Export/Clone one Application from one Namespace to another
 
-1. Login to your RHTAP namespace using `kubelogin` or `kubectl`.
+1. Login to your Konflux namespace using `kubelogin` or `kubectl`.
 
 2.  ```
-    ./rhtap export application my-cool-application  --from my-ws-tenant --to shbose-ws-tenant 
+    ./konflux export application my-cool-application  --from my-ws-tenant --to shbose-ws-tenant 
     ```
 
 Optionally, if you were to work on an embargoed issue, you could import all associated Components as images.
 
 ```
-./rhtap export application my-cool-application --from my-ws-tenant --to shbose-ws-tenant --as-prebuilt-images --skip https://github.com/redhat-appstudio/build-service
+./konflux export application my-cool-application --from my-ws-tenant --to shbose-ws-tenant --as-prebuilt-images --skip https://github.com/redhat-appstudio/build-service
 ```
 
 #### Encrypt sensitive data extracted from one or more namespaces
 
 
-Login to your RHTAP namespace using `kubelogin` or `kubectl`.
+Login to your Konflux namespace using `kubelogin` or `kubectl`.
 
 2.  ```
-    ./rhtap export application my-cool-application -f my-ws-tenant -k /Users/sbose/keys/sbose.pub 
+    ./konflux export application my-cool-application -f my-ws-tenant -k /Users/sbose/keys/sbose.pub 
     ```
 

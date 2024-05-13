@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	rhtapAPI "github.com/konflux-ci/cli/api/v1alpha1"
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -28,7 +28,7 @@ func TestTransformApplication(t *testing.T) {
 			name: "incorrect type",
 			args: args{
 				ctx:                 context.Background(),
-				fetchedResourceList: &rhtapAPI.Component{},
+				fetchedResourceList: &konfluxAPI.Component{},
 			},
 			wantErr: true,
 			want:    nil,
@@ -37,8 +37,8 @@ func TestTransformApplication(t *testing.T) {
 			name: "golden path",
 			args: args{
 				ctx: context.Background(),
-				fetchedResourceList: &rhtapAPI.ApplicationList{
-					Items: []rhtapAPI.Application{
+				fetchedResourceList: &konfluxAPI.ApplicationList{
+					Items: []konfluxAPI.Application{
 						{
 							ObjectMeta: v1.ObjectMeta{
 								Annotations: map[string]string{
@@ -51,7 +51,7 @@ func TestTransformApplication(t *testing.T) {
 			},
 			wantErr: false,
 			want: []runtime.Object{
-				&rhtapAPI.Application{
+				&konfluxAPI.Application{
 					ObjectMeta: v1.ObjectMeta{
 						Annotations: map[string]string{
 							"application.thumbnail": "1",

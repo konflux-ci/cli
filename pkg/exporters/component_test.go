@@ -5,15 +5,15 @@ import (
 	"reflect"
 	"testing"
 
-	rhtapAPI "github.com/konflux-ci/cli/api/v1alpha1"
-	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func TestTransformComponent(t *testing.T) {
-	gitSource := rhtapAPI.ComponentSource{}
-	gitSource.GitSource = &rhtapAPI.GitSource{
+	gitSource := konfluxAPI.ComponentSource{}
+	gitSource.GitSource = &konfluxAPI.GitSource{
 		URL: "https://github.com/a/b",
 	}
 
@@ -32,7 +32,7 @@ func TestTransformComponent(t *testing.T) {
 		{
 			name: "embargo with 3 components",
 			want: []runtime.Object{
-				&rhtapAPI.Component{
+				&konfluxAPI.Component{
 					ObjectMeta: v1.ObjectMeta{
 						Namespace: "foo",
 						Name:      "c1",
@@ -40,11 +40,11 @@ func TestTransformComponent(t *testing.T) {
 							"skip-initial-checks": "true",
 						},
 					},
-					Spec: rhtapAPI.ComponentSpec{
+					Spec: konfluxAPI.ComponentSpec{
 						Application: "app-name",
 					},
 				},
-				&rhtapAPI.Component{
+				&konfluxAPI.Component{
 					// to be imported as an image.
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "c2",
@@ -53,7 +53,7 @@ func TestTransformComponent(t *testing.T) {
 							"skip-initial-checks": "true",
 						},
 					},
-					Spec: rhtapAPI.ComponentSpec{
+					Spec: konfluxAPI.ComponentSpec{
 						Application: "app-name",
 					},
 				},
@@ -68,15 +68,15 @@ func TestTransformComponent(t *testing.T) {
 					ComponentSourceURLskip: "https://github.com/a/b",
 					AsPrebuiltImages:       true,
 				},
-				fetchedResourceList: &rhtapAPI.ComponentList{
-					Items: []rhtapAPI.Component{
+				fetchedResourceList: &konfluxAPI.ComponentList{
+					Items: []konfluxAPI.Component{
 						{
 							// to be imported as image
 							ObjectMeta: v1.ObjectMeta{
 								Name:      "c1",
 								Namespace: "source-ns",
 							},
-							Spec: rhtapAPI.ComponentSpec{
+							Spec: konfluxAPI.ComponentSpec{
 								Application: "app-name",
 							},
 						},
@@ -86,7 +86,7 @@ func TestTransformComponent(t *testing.T) {
 								Name:      "c3",
 								Namespace: "source-ns",
 							},
-							Spec: rhtapAPI.ComponentSpec{
+							Spec: konfluxAPI.ComponentSpec{
 								Application: "app-name",
 								Source:      gitSource,
 							},
@@ -97,7 +97,7 @@ func TestTransformComponent(t *testing.T) {
 								Name:      "c2",
 								Namespace: "source-ns",
 							},
-							Spec: rhtapAPI.ComponentSpec{
+							Spec: konfluxAPI.ComponentSpec{
 								Application: "app-name",
 							},
 						},
@@ -115,14 +115,14 @@ func TestTransformComponent(t *testing.T) {
 					AllApplications:        false,
 					ComponentSourceURLskip: "https://github.com/a/b",
 				},
-				fetchedResourceList: &rhtapAPI.ComponentList{
-					Items: []rhtapAPI.Component{
+				fetchedResourceList: &konfluxAPI.ComponentList{
+					Items: []konfluxAPI.Component{
 						{
 							ObjectMeta: v1.ObjectMeta{
 								Name:      "c1",
 								Namespace: "source-ns",
 							},
-							Spec: rhtapAPI.ComponentSpec{
+							Spec: konfluxAPI.ComponentSpec{
 								Application: "app-name",
 							},
 						},
@@ -131,7 +131,7 @@ func TestTransformComponent(t *testing.T) {
 								Name:      "c3",
 								Namespace: "source-ns",
 							},
-							Spec: rhtapAPI.ComponentSpec{
+							Spec: konfluxAPI.ComponentSpec{
 								Application: "app-name",
 								Source:      gitSource,
 							},
@@ -141,7 +141,7 @@ func TestTransformComponent(t *testing.T) {
 								Name:      "c2",
 								Namespace: "source-ns",
 							},
-							Spec: rhtapAPI.ComponentSpec{
+							Spec: konfluxAPI.ComponentSpec{
 								Application: "not-app-name",
 							},
 						},
@@ -149,7 +149,7 @@ func TestTransformComponent(t *testing.T) {
 				},
 			},
 			want: []runtime.Object{
-				&rhtapAPI.Component{
+				&konfluxAPI.Component{
 					ObjectMeta: v1.ObjectMeta{
 						Namespace: "foo",
 						Name:      "c1",
@@ -158,7 +158,7 @@ func TestTransformComponent(t *testing.T) {
 							"image.redhat.com/generate": `{"visibility": "public"}`,
 						},
 					},
-					Spec: rhtapAPI.ComponentSpec{
+					Spec: konfluxAPI.ComponentSpec{
 						Application: "app-name",
 					},
 				},
