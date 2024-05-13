@@ -1,6 +1,6 @@
 package exporters
 
-//"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands"
+//"github.com/konflux-ci/cli/cmd/rhtap/commands"
 
 /*
 func TestUsageOfExportersAndFetchers(t *testing.T) {

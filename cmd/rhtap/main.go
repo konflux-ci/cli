@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	"github.com/konflux-ci/cli/cmd/rhtap/commands"
+	"github.com/konflux-ci/cli/cmd/rhtap/commands/config"
 	"github.com/spf13/cobra"
 )
 

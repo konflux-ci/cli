@@ -2,7 +2,7 @@
 Command line for working with your Applications on RHTAP
 
 ## Setup
-- `git clone https://github.com/redhat-appstudio/rhtap-cli.git` 
+- `git clone https://github.com/konflux-ci/cli.git` 
 - `cd rhtap-cli`
 - `go build -o rhtap cmd/rhtap/main.go`
 
