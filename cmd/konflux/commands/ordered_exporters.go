@@ -1,6 +1,6 @@
 package commands
 
-import "github.com/redhat-appstudio/rhtap-cli/pkg/exporters"
+import "github.com/konflux-ci/cli/pkg/exporters"
 
 func getOrderedExporters() []exporters.ResourceExport {
 	return []exporters.ResourceExport{

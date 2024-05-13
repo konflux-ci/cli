@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -16,7 +16,7 @@ func TransformEnvironment(ctx context.Context, fetchedResourceList runtime.Objec
 
 	var selectedResources []runtime.Object
 
-	envList, ok := fetchedResourceList.(*rhtapAPI.EnvironmentList)
+	envList, ok := fetchedResourceList.(*konfluxAPI.EnvironmentList)
 
 	if !ok {
 		return nil, fmt.Errorf("resources of type integrationTestScenarioList were not passsed")
@@ -25,7 +25,7 @@ func TransformEnvironment(ctx context.Context, fetchedResourceList runtime.Objec
 	for _, environment := range envList.Items {
 		// skip copying the "development environment"
 		if environment.Name != "development" {
-			selectedResources = append(selectedResources, &rhtapAPI.Environment{
+			selectedResources = append(selectedResources, &konfluxAPI.Environment{
 				TypeMeta: environment.TypeMeta,
 				ObjectMeta: v1.ObjectMeta{
 					Name:      environment.Name,
@@ -42,7 +42,7 @@ func TransformEnvironment(ctx context.Context, fetchedResourceList runtime.Objec
 func GenerateYAMLForEnvironments(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
 	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
-		its := resource.(*rhtapAPI.Environment)
+		its := resource.(*konfluxAPI.Environment)
 		inBytes, err := yaml.Marshal(its)
 		if err != nil {
 			return nil, err
@@ -52,7 +52,7 @@ func GenerateYAMLForEnvironments(ctx context.Context, transformedResources []run
 	return resourcesInYAML, nil
 }
 func GetEnvironments(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var its = &rhtapAPI.EnvironmentList{}
+	var its = &konfluxAPI.EnvironmentList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/environments", namespace)).
 		Do(context.TODO()).Into(its)
 	return its, err

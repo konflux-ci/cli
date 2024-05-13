@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	"github.com/konflux-ci/cli/cmd/konflux/commands"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	"github.com/spf13/cobra"
 )
 
 var cloneConfig = new(config.CloneConfig)
 
 var rcommand = &cobra.Command{
-	Use: "rhtap",
+	Use: "konflux",
 }
 
 var versionCommand = &cobra.Command{

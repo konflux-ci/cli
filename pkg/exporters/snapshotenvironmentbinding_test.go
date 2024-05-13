@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -28,14 +28,14 @@ func TestTransformSnapshotEnvironmentBindings(t *testing.T) {
 			name: "for a single ns",
 			args: args{
 				ctx: context.Background(),
-				fetchedResourceList: &rhtapAPI.SnapshotEnvironmentBindingList{
-					Items: []rhtapAPI.SnapshotEnvironmentBinding{
+				fetchedResourceList: &konfluxAPI.SnapshotEnvironmentBindingList{
+					Items: []konfluxAPI.SnapshotEnvironmentBinding{
 						{
 							ObjectMeta: v1.ObjectMeta{
 								Name:      "seb1",
 								Namespace: "source-namespace",
 							},
-							Spec: rhtapAPI.SnapshotEnvironmentBindingSpec{
+							Spec: konfluxAPI.SnapshotEnvironmentBindingSpec{
 								Application: "source-application",
 							},
 						},
@@ -50,12 +50,12 @@ func TestTransformSnapshotEnvironmentBindings(t *testing.T) {
 			},
 			wantErr: false,
 			want: []runtime.Object{
-				&rhtapAPI.SnapshotEnvironmentBinding{
+				&konfluxAPI.SnapshotEnvironmentBinding{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "seb1",
 						Namespace: "target-namespace",
 					},
-					Spec: rhtapAPI.SnapshotEnvironmentBindingSpec{
+					Spec: konfluxAPI.SnapshotEnvironmentBindingSpec{
 						Application: "source-application",
 					},
 				},

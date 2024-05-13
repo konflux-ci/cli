@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -32,8 +32,8 @@ func TestTransformEnvironment(t *testing.T) {
 					SourceNamespace: "source-ns",
 					TargetNamespace: "target-ns",
 				},
-				fetchedResourceList: &rhtapAPI.EnvironmentList{
-					Items: []rhtapAPI.Environment{
+				fetchedResourceList: &konfluxAPI.EnvironmentList{
+					Items: []konfluxAPI.Environment{
 						{
 							ObjectMeta: v1.ObjectMeta{
 								Name:      "production",
@@ -50,7 +50,7 @@ func TestTransformEnvironment(t *testing.T) {
 				},
 			},
 			want: []runtime.Object{
-				&rhtapAPI.Environment{
+				&konfluxAPI.Environment{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "production",
 						Namespace: "target-ns",

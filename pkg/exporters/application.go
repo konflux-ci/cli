@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -16,7 +16,7 @@ func TransformApplication(ctx context.Context, fetchedResourceList runtime.Objec
 
 	var selectedResources []runtime.Object
 
-	applicationsList, ok := fetchedResourceList.(*rhtapAPI.ApplicationList)
+	applicationsList, ok := fetchedResourceList.(*konfluxAPI.ApplicationList)
 
 	if !ok {
 		return nil, fmt.Errorf("resource of type ApplicationList was not passsed")
@@ -24,7 +24,7 @@ func TransformApplication(ctx context.Context, fetchedResourceList runtime.Objec
 
 	for _, application := range applicationsList.Items {
 		if cloneConfig.AllApplications || application.Name == cloneConfig.ApplicatioName {
-			transformedApplication := &rhtapAPI.Application{
+			transformedApplication := &konfluxAPI.Application{
 				TypeMeta: application.TypeMeta,
 				ObjectMeta: v1.ObjectMeta{
 					Name:      application.Name,
@@ -44,7 +44,7 @@ func TransformApplication(ctx context.Context, fetchedResourceList runtime.Objec
 func GenerateYAMLForApplication(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
 	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
-		application := resource.(*rhtapAPI.Application)
+		application := resource.(*konfluxAPI.Application)
 		inBytes, err := yaml.Marshal(application)
 		if err != nil {
 			return nil, err
@@ -55,7 +55,7 @@ func GenerateYAMLForApplication(ctx context.Context, transformedResources []runt
 }
 
 func GetApplications(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var applications = &rhtapAPI.ApplicationList{}
+	var applications = &konfluxAPI.ApplicationList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/applications", namespace)).
 		Do(context.TODO()).Into(applications)
 	return applications, err

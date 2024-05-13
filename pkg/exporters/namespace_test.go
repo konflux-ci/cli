@@ -7,7 +7,7 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -17,11 +17,11 @@ import (
 // Transform transforms a Component for exporting into a backup/retarget or cloning for use in a different namespace
 func (c *ComponentExport) Transform(ctx context.Context, obj runtime.Object, cloneConfig config.CloneConfig, asIs bool) (runtime.Object, error) {
 
-	fetchedComponent, OK := obj.(*rhtapAPI.Component)
+	fetchedComponent, OK := obj.(*konfluxAPI.Component)
 	if !OK {
 		return nil, fmt.Errorf("did not find a Component resource")
 	}
-	transformedComponent := &rhtapAPI.Component{
+	transformedComponent := &konfluxAPI.Component{
 		TypeMeta: fetchedComponent.TypeMeta,
 
 		ObjectMeta: v1.ObjectMeta{
@@ -37,14 +37,14 @@ func (c *ComponentExport) Transform(ctx context.Context, obj runtime.Object, clo
 func TransformComponent(ctx context.Context, fetchedResourceList runtime.Object, cloneConfig config.CloneConfig, localCache []runtime.Object) ([]runtime.Object, error) {
 	var selectedResources []runtime.Object
 
-	componentList, ok := fetchedResourceList.(*rhtapAPI.ComponentList)
+	componentList, ok := fetchedResourceList.(*konfluxAPI.ComponentList)
 
 	if !ok {
 		return nil, fmt.Errorf("resources of type componentList were not passsed")
 	}
 
 	for _, component := range componentList.Items {
-		var transformedComponent *rhtapAPI.Component
+		var transformedComponent *konfluxAPI.Component
 
 		if cloneConfig.AllApplications || cloneConfig.ApplicatioName == component.Spec.Application {
 
@@ -52,7 +52,7 @@ func TransformComponent(ctx context.Context, fetchedResourceList runtime.Object,
 				continue
 			}
 
-			transformedComponent = &rhtapAPI.Component{
+			transformedComponent = &konfluxAPI.Component{
 				TypeMeta: component.TypeMeta,
 
 				ObjectMeta: v1.ObjectMeta{
@@ -84,7 +84,7 @@ func TransformComponent(ctx context.Context, fetchedResourceList runtime.Object,
 func GenerateYAMLForComponent(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
 	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
-		component := resource.(*rhtapAPI.Component)
+		component := resource.(*konfluxAPI.Component)
 		inBytes, err := yaml.Marshal(component)
 		if err != nil {
 			return nil, err
@@ -100,7 +100,7 @@ type ComponentFetch struct{}
 var _ ResourceFetcher = &ComponentFetch{}
 
 func (c *ComponentFetch) Get(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var components = &rhtapAPI.ComponentList{}
+	var components = &konfluxAPI.ComponentList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/components", namespace)).
 		Do(context.TODO()).Into(components)
 	return components, err
@@ -108,7 +108,7 @@ func (c *ComponentFetch) Get(ctx context.Context, namespace string, cloneConfig 
 */
 
 func GetComponents(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var components = &rhtapAPI.ComponentList{}
+	var components = &konfluxAPI.ComponentList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/components", namespace)).
 		Do(context.TODO()).Into(components)
 	return components, err

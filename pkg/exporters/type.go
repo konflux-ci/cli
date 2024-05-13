@@ -3,7 +3,7 @@ package exporters
 import (
 	"context"
 
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 )

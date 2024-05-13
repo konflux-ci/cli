@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -28,14 +28,14 @@ func TestTransformSnapshots(t *testing.T) {
 			name: "snapshots by application",
 			args: args{
 				ctx: context.Background(),
-				fetchedResourceList: &rhtapAPI.SnapshotList{
-					Items: []rhtapAPI.Snapshot{
+				fetchedResourceList: &konfluxAPI.SnapshotList{
+					Items: []konfluxAPI.Snapshot{
 						{
 							ObjectMeta: v1.ObjectMeta{
 								Name:      "s1",
 								Namespace: "source-namepsace",
 							},
-							Spec: rhtapAPI.SnapshotSpec{
+							Spec: konfluxAPI.SnapshotSpec{
 								Application: "source-application",
 							},
 						},
@@ -44,7 +44,7 @@ func TestTransformSnapshots(t *testing.T) {
 								Name:      "s2",
 								Namespace: "source-namepsace",
 							},
-							Spec: rhtapAPI.SnapshotSpec{
+							Spec: konfluxAPI.SnapshotSpec{
 								Application: "not-source-application",
 							},
 						},
@@ -59,12 +59,12 @@ func TestTransformSnapshots(t *testing.T) {
 			},
 			wantErr: false,
 			want: []runtime.Object{
-				&rhtapAPI.Snapshot{
+				&konfluxAPI.Snapshot{
 					ObjectMeta: v1.ObjectMeta{
 						Name:      "s1",
 						Namespace: "target-namepsace",
 					},
-					Spec: rhtapAPI.SnapshotSpec{
+					Spec: konfluxAPI.SnapshotSpec{
 						Application: "source-application",
 					},
 				},

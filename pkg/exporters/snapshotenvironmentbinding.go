@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	rhtapAPI "github.com/redhat-appstudio/rhtap-cli/api/v1alpha1"
-	"github.com/redhat-appstudio/rhtap-cli/cmd/rhtap/commands/config"
+	konfluxAPI "github.com/konflux-ci/cli/api/v1alpha1"
+	"github.com/konflux-ci/cli/cmd/konflux/commands/config"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
@@ -16,7 +16,7 @@ func TransformSnapshotEnvironmentBindings(ctx context.Context, fetchedResourceLi
 
 	var selectedResources []runtime.Object
 
-	itsList, ok := fetchedResourceList.(*rhtapAPI.SnapshotEnvironmentBindingList)
+	itsList, ok := fetchedResourceList.(*konfluxAPI.SnapshotEnvironmentBindingList)
 
 	if !ok {
 		return nil, fmt.Errorf("resource of type SnapshotEnvironmentBindingList was not passsed")
@@ -26,7 +26,7 @@ func TransformSnapshotEnvironmentBindings(ctx context.Context, fetchedResourceLi
 
 		// TODO: Discard all snapshots which are not relevant.
 		if cloneConfig.AllApplications || cloneConfig.ApplicatioName == seb.Spec.Application {
-			transformedSnapshot := &rhtapAPI.SnapshotEnvironmentBinding{
+			transformedSnapshot := &konfluxAPI.SnapshotEnvironmentBinding{
 				TypeMeta: seb.TypeMeta,
 				ObjectMeta: v1.ObjectMeta{
 					Name:      seb.Name,
@@ -43,7 +43,7 @@ func TransformSnapshotEnvironmentBindings(ctx context.Context, fetchedResourceLi
 func GenerateYAMLForSnapshotEnvironmentBindings(ctx context.Context, transformedResources []runtime.Object) ([][]byte, error) {
 	var resourcesInYAML [][]byte
 	for _, resource := range transformedResources {
-		snapshot := resource.(*rhtapAPI.SnapshotEnvironmentBinding)
+		snapshot := resource.(*konfluxAPI.SnapshotEnvironmentBinding)
 		inBytes, err := yaml.Marshal(snapshot)
 		if err != nil {
 			return nil, err
@@ -53,7 +53,7 @@ func GenerateYAMLForSnapshotEnvironmentBindings(ctx context.Context, transformed
 	return resourcesInYAML, nil
 }
 func GetSnapshotEnvironmentBindings(ctx context.Context, namespace string, cloneConfig config.CloneConfig, client *kubernetes.Clientset) (runtime.Object, error) {
-	var its = &rhtapAPI.SnapshotEnvironmentBindingList{}
+	var its = &konfluxAPI.SnapshotEnvironmentBindingList{}
 	err := client.RESTClient().Get().AbsPath(fmt.Sprintf("/apis/appstudio.redhat.com/v1alpha1/namespaces/%s/snapshotenvironmentbindings", namespace)).
 		Do(context.TODO()).Into(its)
 	return its, err

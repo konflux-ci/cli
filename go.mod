@@ -1,4 +1,4 @@
-module github.com/redhat-appstudio/rhtap-cli
+module github.com/konflux-ci/cli
 
 go 1.20
 
